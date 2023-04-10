@@ -3,11 +3,11 @@ import { Alert, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, Url } from "../config";
 import { Context } from "../context/Context";
-import { alignCenter, justifyCenter } from "./Home/style";
+import { alignCenter, justifyCenter } from "../style/style";
 
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const { saveUser, handleSetSessionID } = useContext<IContextInput>(Context);
 
@@ -23,10 +23,12 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
   };
 
   const textBoxStyle: ViewStyle = {
-    marginVertical: 2,
+    marginVertical: "auto",
     borderWidth: 2,
     borderRadius: 10,
     width: "80%",
+    height: "5%",
+    marginBottom: 5,
     paddingHorizontal: 8,
   };
 
@@ -49,13 +51,13 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
 
   const handleCreateSessionID = async (): Promise<boolean | undefined> => {
     try {
-      const createRequestToken = await (await fetch(`${Url}${createRequestTokenUrl}?api_key=${APIKey}`)).json();
+      const createRequestToken: IRequestTokenResponse = await (await fetch(`${Url}${createRequestTokenUrl}?api_key=${APIKey}`)).json();
 
       if (!createRequestToken.success) {
         Alert.alert("Error", createRequestToken.status_message);
         return false;
       }
-      const getTokenApproved = await (
+      const getTokenApproved: IGetTokenApproved = await (
         await fetch(`${Url}${authenticateRequestTokenUrl}?api_key=${APIKey}`, {
           method: "POST",
           headers: {
@@ -75,7 +77,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
         return false;
       }
 
-      const createSessionID = await (
+      const createSessionID: ICreateSessionID = await (
         await fetch(`${Url}${createSessionIDUrl}?api_key=${APIKey}`, {
           method: "POST",
           headers: {

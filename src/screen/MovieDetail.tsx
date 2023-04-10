@@ -1,21 +1,30 @@
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { Alert, Image, ImageBackground, ImageStyle, ScrollView, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Alert, Dimensions, Image, ImageStyle, ScrollView, Text, TextStyle, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { Card } from "../component";
-import { addToWatchList, APIKey, getMovieDetailUrl, getMovieReviewUrl, getMovieStateUrl, manipulateRating, Url } from "../config";
+import {
+  addToWatchList,
+  APIKey,
+  getImageUrl,
+  getMovieDetailUrl,
+  getMovieReviewUrl,
+  getMovieStateUrl,
+  manipulateRating,
+  Url,
+} from "../config";
 import { Context } from "../context/Context";
-import { alignCenter, justifyCenter } from "./Home/style";
+import { alignCenter, justifyCenter } from "../style/style";
 
 export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: MovieDetailProp): JSX.Element => {
   const { selectedMovieID, sessionID } = useContext<IContextInput>(Context);
   const [movieDetail, setMovieDetail] = useState<IMovieDetail | undefined>(undefined);
   const [movieReviewList, setMovieReviewList] = useState<IMovieReview[] | undefined>(undefined);
-  const [addedWatchList, setAddedWatchList] = useState(false);
+  const [addedWatchList, setAddedWatchList] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(3);
-  const [ratingSubmitted, setRatingSubmitted] = useState(false);
-  const [showMore, setShowMore] = useState(false);
-  const ratingRange = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
+  const [showMore, setShowMore] = useState<boolean>(false);
+  const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const handleSetMovieReviewList = (newMovieReviewList: IMovieReview[]): void => {
     setMovieReviewList(newMovieReviewList);
@@ -53,13 +62,13 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const handleAddedWatchList = async (): Promise<void> => {
-    const success = await handleAddToWatchListDB();
+    const success: boolean = await handleAddToWatchListDB();
     if (success) {
       if (addedWatchList) {
         // initially movie is in watchlist but now want to remove
-        Alert.alert("Successful", "Removed from Watch List");
+        Alert.alert("Success", "Removed from Watch List");
       } else {
-        Alert.alert("Successful", "Added to Watch List");
+        Alert.alert("Success", "Added to Watch List");
       }
       setAddedWatchList(!addedWatchList);
     } else if (!success) {
@@ -95,7 +104,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const handleDeleteRatingDB = async (): Promise<boolean> => {
     try {
-      const response = await (
+      const response: IDeleteRatingResponse = await (
         await fetch(`${manipulateRating(selectedMovieID)}${sessionID}`, {
           method: "DELETE",
           headers: {
@@ -112,7 +121,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const handleSetRatingSubmitted = async (): Promise<void> => {
-    let success;
+    let success: boolean;
     if (ratingSubmitted) {
       // if there is rating already and you want to remove it
       success = await handleDeleteRatingDB();
@@ -231,8 +240,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const handleFetchMovieDetail = async (): Promise<void> => {
     try {
-      const result = await fetch(`${Url}${getMovieDetailUrl}${selectedMovieID}?api_key=${APIKey}`);
-      const jsonResponse = await result.json();
+      const jsonResponse: IMovieDetail = await (await fetch(`${Url}${getMovieDetailUrl}${selectedMovieID}?api_key=${APIKey}`)).json();
       handleSetMovieDetail(jsonResponse);
     } catch (err) {
       console.log("err", err);
@@ -241,8 +249,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const handleFetchMovieStates = async (): Promise<void> => {
     try {
-      const result = await fetch(`${Url}${getMovieStateUrl(selectedMovieID)}?api_key=${APIKey}&session_id=${sessionID}`);
-      const jsonResponse: IMovieState = await result.json();
+      const jsonResponse: IMovieState = await (
+        await fetch(`${Url}${getMovieStateUrl(selectedMovieID)}?api_key=${APIKey}&session_id=${sessionID}`)
+      ).json();
       setAddedWatchList(jsonResponse.watchlist);
 
       if (typeof jsonResponse.rated === "object") {
@@ -256,8 +265,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const handleFetchMovieReviews = async (): Promise<void> => {
     try {
-      const result = await fetch(`${Url}${getMovieReviewUrl(selectedMovieID)}?api_key=${APIKey}&session_id=${sessionID}`);
-      const jsonResponse: IMovieReviewListResponse = await result.json();
+      const jsonResponse: IMovieReviewListResponse = await (
+        await fetch(`${Url}${getMovieReviewUrl(selectedMovieID)}?api_key=${APIKey}&session_id=${sessionID}`)
+      ).json();
       handleSetMovieReviewList(jsonResponse.results);
     } catch (err) {
       console.log("err", err);
@@ -274,10 +284,10 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     <Fragment>
       {movieDetail !== undefined ? (
         <ScrollView nestedScrollEnabled={true} style={{ height: "100%", backgroundColor: "black", paddingHorizontal: 10 }}>
-          <ImageBackground
-            source={{ uri: `https://image.tmdb.org/t/p/original${movieDetail.poster_path}` }}
+          <Image
+            source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
-            style={{ flex: 1, height: 400, width: "100%" }}
+            style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%" }} // 1.618 is golden ratio
           />
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
@@ -320,7 +330,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             </View>
           </ScrollView>
 
-          <View style={{ height: 250, borderRadius: 10 }}>
+          <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : 250, borderRadius: 10 }}>
             <Text style={detailTitle}>Review: </Text>
             <ScrollView nestedScrollEnabled={true}>{handleDisplayReview(movieReviewList)}</ScrollView>
           </View>

@@ -1,3 +1,20 @@
+declare interface IRequestTokenResponse {
+  success: boolean;
+  expires_at: string;
+  request_token: string;
+}
+
+declare interface IGetTokenApproved {
+  success: boolean;
+  expires_at: string;
+  request_token: string;
+}
+
+declare interface ICreateSessionID {
+  success: boolean;
+  session_id: string;
+}
+
 declare interface IMovie {
   adult: boolean;
   backdrop_path: string | null;
@@ -131,4 +148,10 @@ declare interface IPostRatingResponse {
   success: boolean;
   status_code: number;
   status_message: string;
+}
+
+declare interface IDeleteRatingResponse {
+  status_code: number;
+  status_message: string;
+  success: boolean;
 }

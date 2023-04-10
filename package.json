@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator=\"iPhone 14 Pro Max\"",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
@@ -12,12 +12,10 @@
     "build": "npm run tsc",
     "build:android:debug": "cd android && ./gradlew assembleDebug",
     "build:android:release": "cd android && ./gradlew assembleRelease",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/KenangaMobile/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "clean:android": "cd android/app && rm -rf build",
     "clean:pods": "cd ios && rm -rf pods && pod install",
     "clean:ios": "npm run clean:pods && cd ios && rm -rf build",
     "clean:modules": "rm -rf node_modules && yarn",
-    "install:pods": "cd ios && pod install",
     "remove:ios:build": "cd ios && rm -rf build"
   },
   "dependencies": {

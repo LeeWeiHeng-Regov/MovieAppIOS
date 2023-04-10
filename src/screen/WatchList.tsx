@@ -2,9 +2,9 @@ import React, { Fragment, FunctionComponent, useContext, useEffect, useState } f
 import { ScrollView, Text } from "react-native";
 
 import { NavigationBar } from "../component";
+import { MovieCard } from "../component/MovieCard";
 import { getWatchList } from "../config";
 import { Context } from "../context/Context";
-import { MovieCard } from "./Home/MovieCard";
 
 export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: WatchListProp): JSX.Element => {
   const [watchList, setWatchList] = useState<IMovie[] | undefined>(undefined);
@@ -16,8 +16,7 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
 
   const handleFetchWatchList = async (): Promise<void> => {
     try {
-      const result = await fetch(`${getWatchList}${sessionID}`);
-      const jsonResponse: IMovieWatchListResponse = await result.json();
+      const jsonResponse: IMovieWatchListResponse = await (await fetch(`${getWatchList}${sessionID}`)).json();
       handleSetWatchList(jsonResponse.results);
     } catch (err) {
       console.log("err", err);
@@ -33,7 +32,7 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
       <ScrollView>
         {watchList !== undefined ? (
           watchList.map((item, index) => {
-            const handleMovieSelected = () => {
+            const handleMovieSelected = (): void => {
               changeSelectedMovieID(item.id);
               navigation.navigate("MovieDetail");
             };

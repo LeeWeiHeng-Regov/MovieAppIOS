@@ -2,14 +2,14 @@ import React, { Fragment, FunctionComponent, useContext, useEffect, useState } f
 import { FlatList, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
 
 import { NavigationBar } from "../component";
+import { MovieCard } from "../component/MovieCard";
 import { APIKey, getTrendingMovieListUrl, Url } from "../config";
 import { Context } from "../context/Context";
-import { MovieCard } from "./Home/MovieCard";
-import { alignCenter, justifyCenter } from "./Home/style";
+import { alignCenter, justifyCenter } from "../style/style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
-  const [searchPhrase, setSearchPhrase] = useState("");
-  const [clicked, setClicked] = useState(false);
+  const [searchPhrase, setSearchPhrase] = useState<string>("");
+  const [clicked, setClicked] = useState<boolean>(false);
   const [data, setData] = useState<IMovieList | undefined>(undefined);
   const { changeSelectedMovieID } = useContext<IContextInput>(Context);
 
@@ -55,8 +55,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
 
   const handleFetchTrendingMovieList = async (): Promise<void> => {
     try {
-      const result = await fetch(`${Url}${getTrendingMovieListUrl}?api_key=${APIKey}`);
-      const jsonResponse = await result.json();
+      const jsonResponse: IMovieList = await (await fetch(`${Url}${getTrendingMovieListUrl}?api_key=${APIKey}`)).json();
       handleSetData(jsonResponse);
     } catch (err) {
       console.log("err", err);

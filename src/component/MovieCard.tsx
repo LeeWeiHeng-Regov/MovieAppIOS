@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { GestureResponderEvent, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
-import { Card } from "../../component";
+import { Card } from "./Card";
 
 const movieCard: ViewStyle = {
   width: "95%",

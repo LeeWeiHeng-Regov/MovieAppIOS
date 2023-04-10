@@ -19,3 +19,4 @@ export const addToWatchList = `${Url}/account/${accountID}/watchlist?api_key=${A
 export const manipulateRating = (movieID: number) => {
   return `${Url}/movie/${movieID}/rating?api_key=${APIKey}&session_id=`;
 };
+export const getImageUrl = `https://image.tmdb.org/t/p/original`;

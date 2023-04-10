@@ -5,7 +5,7 @@ declare interface IContextInput {
   sessionID: number;
   saveUser: (user: IUser) => void;
   changeSelectedMovieID: (movieID: number) => void;
-  handleSetSessionID: (sessionID: number) => void;
+  handleSetSessionID: (sessionID: string) => void;
 }
 
 declare interface IContextProviderProps {

@@ -26,6 +26,7 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
     padding: 2,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 10,
   };
 
   const navigatorButtonText: TextStyle = {
