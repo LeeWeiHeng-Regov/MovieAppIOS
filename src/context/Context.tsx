@@ -12,7 +12,7 @@ const initialState: IUser = {
 export const Context: React.Context<IContextInput> = createContext<IContextInput>({
   user: initialState,
   selectedMovieID: 0,
-  sessionID: 0,
+  sessionID: "",
   saveUser: () => {},
   changeSelectedMovieID: () => {},
   handleSetSessionID: () => {},
@@ -23,13 +23,13 @@ const { Provider } = Context;
 export const ContextProvider: FunctionComponent<IContextProviderProps> = ({ children }: IContextProviderProps): JSX.Element => {
   const [user, setUser] = useState<IUser>(initialState);
   const [selectedMovieID, setSelectedMovieID] = useState<number>(0);
-  const [sessionID, setSessionID] = useState<number>(0);
+  const [sessionID, setSessionID] = useState<string>("");
 
   const changeSelectedMovieID = (newMovieID: number) => {
     setSelectedMovieID(newMovieID);
   };
 
-  const handleSetSessionID = (newSessionID: number) => {
+  const handleSetSessionID = (newSessionID: string) => {
     setSessionID(newSessionID);
   };
 
