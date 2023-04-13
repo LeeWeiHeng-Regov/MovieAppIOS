@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios --simulator=\"iPhone 14 Pro Max\"",
+    "ios": "react-native run-ios --simulator=\"iPhone (5)\"",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
@@ -19,13 +19,15 @@
     "remove:ios:build": "cd ios && rm -rf build"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "react": "18.2.0",
     "react-native": "^0.71.6",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-safe-area-context": "^4.5.0",
-    "react-native-screens": "^3.20.0"
+    "react-native-screens": "^3.20.0",
+    "react-native-touch-id": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
