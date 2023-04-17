@@ -18,16 +18,19 @@ export const AppStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
+            headerShown: true,
           }}
         />
         <Screen
           name="Home"
           component={Home}
           options={{
-            title: "Home",
+            title: "My Movie App",
             headerTitleAlign: "center",
-            headerTitleStyle: { fontSize: 30 },
+            headerTitleStyle: { fontSize: 30, color: "#0CFF00" },
             headerTransparent: false,
+            headerShown: true,
+            headerStyle: { backgroundColor: "black" },
           }}
         />
         <Screen
@@ -38,6 +41,7 @@ export const AppStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
+            headerShown: false,
           }}
         />
         <Screen
@@ -48,6 +52,7 @@ export const AppStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
+            headerShown: false,
           }}
         />
         <Screen
@@ -58,6 +63,7 @@ export const AppStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
+            headerShown: false,
           }}
         />
       </Navigator>
