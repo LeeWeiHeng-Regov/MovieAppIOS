@@ -20,3 +20,7 @@ export const manipulateRating = (movieID: number) => {
   return `${Url}/movie/${movieID}/rating?api_key=${APIKey}&session_id=`;
 };
 export const getImageUrl = `https://image.tmdb.org/t/p/original`;
+
+export const getPopularMovie = `${Url}/movie/popular?api_key=${APIKey}`;
+export const getTopRatedMovie = `${Url}/movie/top_rated?api_key=${APIKey}`;
+export const getUpcomingMovie = `${Url}/movie/upcoming?api_key=${APIKey}`;
