@@ -1,10 +1,12 @@
 import React, { Fragment } from "react";
-import { GestureResponderEvent, Text, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { Dimensions, GestureResponderEvent, Image, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
+import { getImageUrl } from "../config";
 import { Card } from "./Card";
 
 const movieCard: ViewStyle = {
-  width: "95%",
+  height: ((Dimensions.get("screen").width - 10) * 1.618) / 2,
+  width: (Dimensions.get("screen").width - 10) / 2,
   alignSelf: "center",
   backgroundColor: "lightgreen",
 };
@@ -22,18 +24,27 @@ const movieDate: TextStyle = {
 };
 
 interface IMovieCardProps {
-  title: string;
-  releaseDate: string;
+  posterPath?: string | null;
   navigationFunction?: (event: GestureResponderEvent) => void;
 }
 
-export const MovieCard = ({ title, releaseDate, navigationFunction }: IMovieCardProps): JSX.Element => {
+export const MovieCard = ({ posterPath, navigationFunction }: IMovieCardProps): JSX.Element => {
   return (
     <Card style={movieCard}>
       <Fragment>
         <TouchableOpacity onPress={navigationFunction}>
-          <Text style={movieTitle}>{title}</Text>
-          <Text style={movieDate}>{releaseDate}</Text>
+          <Image
+            source={posterPath !== null ? { uri: `${getImageUrl}${posterPath}` } : require("../asset/imageNotFound.svg")}
+            style={{
+              height: "100%",
+              width: "100%",
+              resizeMode: "stretch",
+              borderRadius: 8,
+            }}
+          />
+          {/* <View style={{ height: "20%" }}>
+            <Text style={movieTitle}>{title}</Text>
+          </View> */}
         </TouchableOpacity>
       </Fragment>
     </Card>
