@@ -1,5 +1,5 @@
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { FlatList, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { FlatList, SafeAreaView, StatusBar, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 
 import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
@@ -21,7 +21,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
     setSearchPhrase("");
   };
 
-  const clickedTextBoxStyle: ViewStyle = {
+  const clickedTextBoxStyle: TextStyle = {
     marginVertical: 2,
     borderWidth: 4,
     borderRadius: 30,
@@ -29,9 +29,10 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
     width: "80%",
     height: 50,
     paddingHorizontal: 20,
+    color: "white",
   };
 
-  const unclickedTextBoxStyle: ViewStyle = {
+  const unclickedTextBoxStyle: TextStyle = {
     marginVertical: 2,
     borderWidth: 4,
     borderRadius: 30,
@@ -39,6 +40,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
     width: "95%",
     height: 50,
     paddingHorizontal: 20,
+    color: "white",
   };
 
   const cancelButton: ViewStyle = {
@@ -67,46 +69,47 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   }, []);
 
   return (
-    <Fragment>
-      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-          <TextInput
-            onChangeText={(value) => setSearchPhrase(value)}
-            onFocus={() => setClicked(true)}
-            onBlur={() => setClicked(false)}
-            placeholder="Search..."
-            placeholderTextColor="#6B6B6B"
-            value={searchPhrase}
-            style={clicked ? clickedTextBoxStyle : unclickedTextBoxStyle}></TextInput>
-          {clicked ? (
-            <TouchableOpacity style={cancelButton} onPress={handleCancel}>
-              <Text>Cancel</Text>
-            </TouchableOpacity>
-          ) : null}
-        </View>
-        <Fragment>
-          {data !== undefined ? (
-            <FlatList
-              data={data.results}
-              renderItem={({ item, index }) => {
-                const handleNavigation = () => {
-                  changeSelectedMovieID(item.id);
-                  navigation.navigate("MovieDetail");
-                };
-                return item.title.toLowerCase().includes(searchPhrase.toLowerCase()) ? (
-                  <MovieCard key={index} title={item.title} releaseDate={item.release_date} navigationFunction={handleNavigation} />
-                ) : null;
-              }}
-              keyExtractor={(item) => item.id.toString()}
-              style={{ marginBottom: "auto", width: "100%" }}
-            />
-          ) : (
-            <Text>Loading...</Text>
-          )}
-        </Fragment>
+    <SafeAreaView style={{ height: "100%", backgroundColor: "black" }}>
+      <StatusBar barStyle={"light-content"} />
 
-        <NavigationBar pageName={"Home"} navigationFunction={navigation}></NavigationBar>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+        <TextInput
+          onChangeText={(value) => setSearchPhrase(value)}
+          onFocus={() => setClicked(true)}
+          onBlur={() => setClicked(false)}
+          placeholder="Search..."
+          placeholderTextColor="white"
+          value={searchPhrase}
+          style={clicked ? clickedTextBoxStyle : unclickedTextBoxStyle}></TextInput>
+        {clicked ? (
+          <TouchableOpacity style={cancelButton} onPress={handleCancel}>
+            <Text>Cancel</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
-    </Fragment>
+      <Fragment>
+        {data !== undefined ? (
+          <FlatList
+            data={data.results}
+            renderItem={({ item, index }) => {
+              const handleNavigation = () => {
+                changeSelectedMovieID(item.id);
+                navigation.navigate("MovieDetail");
+              };
+              return item.title.toLowerCase().includes(searchPhrase.toLowerCase()) ? (
+                <MovieCard key={index} posterPath={item.poster_path} navigationFunction={handleNavigation} />
+              ) : null;
+            }}
+            keyExtractor={(item) => item.id.toString()}
+            style={{ marginBottom: "auto", width: "100%" }}
+            numColumns={2}
+          />
+        ) : (
+          <Text>Loading...</Text>
+        )}
+      </Fragment>
+
+      <NavigationBar pageName={"Home"} navigationFunction={navigation}></NavigationBar>
+    </SafeAreaView>
   );
 };

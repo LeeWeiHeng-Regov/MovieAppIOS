@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { Fragment, FunctionComponent, useContext, useEffect, useRef, useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, ViewStyle } from "react-native";
 import TouchID from "react-native-touch-id";
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, Url } from "../config";
@@ -109,7 +109,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     }
   };
 
-  const checkEasyLogin = async () => {
+  const easyLogin = async () => {
     let storageUsername: string, storagePassword: string;
     try {
       const allowEasyLogin: boolean = await AsyncStorage.multiGet(["username", "password"]).then((data) => {
@@ -125,7 +125,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       if (allowEasyLogin) {
         TouchID.authenticate("Login using FaceID", { passcodeFallback: true })
           .then(async (success: boolean) => {
-            Alert.alert("Success", "Authenticated Successfully");
             const createdSessionID = await handleCreateSessionID(storageUsername, storagePassword);
 
             if (createdSessionID) {
@@ -148,11 +147,11 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
   };
 
   useEffect((): void => {
-    checkEasyLogin();
+    easyLogin();
   }, []);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         justifyContent: "center",
         alignItems: "center",
@@ -178,6 +177,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       </TouchableOpacity>
 
       {/* <Text>{loginBefore ? "login before" : "never login before"}</Text> */}
-    </View>
+    </SafeAreaView>
   );
 };
