@@ -16,16 +16,20 @@
     "clean:pods": "cd ios && rm -rf pods && pod install",
     "clean:ios": "npm run clean:pods && cd ios && rm -rf build",
     "clean:modules": "rm -rf node_modules && yarn",
-    "remove:ios:build": "cd ios && rm -rf build"
+    "remove:ios:build": "cd ios && rm -rf build",
+    "ios:device": "npx react-native run-ios --device"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "react": "18.2.0",
     "react-native": "^0.71.6",
+    "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-safe-area-context": "^4.5.0",
-    "react-native-screens": "^3.20.0"
+    "react-native-screens": "^3.20.0",
+    "react-native-touch-id": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

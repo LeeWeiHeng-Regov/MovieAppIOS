@@ -1,5 +1,7 @@
-import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { Fragment, FunctionComponent, useContext, useEffect, useRef, useState } from "react";
+import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, ViewStyle } from "react-native";
+import TouchID from "react-native-touch-id";
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, Url } from "../config";
 import { Context } from "../context/Context";
@@ -8,6 +10,7 @@ import { alignCenter, justifyCenter } from "../style/style";
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  let loginButton = useRef();
 
   const { saveUser, handleSetSessionID } = useContext<IContextInput>(Context);
 
@@ -36,10 +39,14 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     if (username === "" || password === "") {
       Alert.alert("Error", "Please fill in your user name and password!");
     } else {
-      const createdSessionID = await handleCreateSessionID();
+      const createdSessionID = await handleCreateSessionID(username, password);
 
       if (createdSessionID) {
         saveUser({ username: username, password: password });
+        AsyncStorage.multiSet([
+          ["username", username],
+          ["password", password],
+        ]);
         navigation.navigate("Home");
         navigation.reset({
           index: 0,
@@ -49,7 +56,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     }
   };
 
-  const handleCreateSessionID = async (): Promise<boolean | undefined> => {
+  const handleCreateSessionID = async (username: string, password: string): Promise<boolean | undefined> => {
     try {
       const createRequestToken: IRequestTokenResponse = await (await fetch(`${Url}${createRequestTokenUrl}?api_key=${APIKey}`)).json();
 
@@ -73,7 +80,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       ).json();
 
       if (!getTokenApproved.success) {
-        Alert.alert("Error: ", getTokenApproved.status_message);
+        Alert.alert("Error on approve token: ", getTokenApproved.status_message);
         return false;
       }
 
@@ -102,8 +109,47 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     }
   };
 
+  const easyLogin = async () => {
+    let storageUsername: string, storagePassword: string;
+    try {
+      const allowEasyLogin: boolean = await AsyncStorage.multiGet(["username", "password"]).then((data) => {
+        const fetchedUsername = data[0][1];
+        const fetchedPassword = data[1][1];
+        if (fetchedUsername !== null && fetchedPassword !== null) {
+          storageUsername = fetchedUsername;
+          storagePassword = fetchedPassword;
+          return true;
+        }
+        return false;
+      });
+      if (allowEasyLogin) {
+        TouchID.authenticate("Login using FaceID", { passcodeFallback: true })
+          .then(async (success: boolean) => {
+            const createdSessionID = await handleCreateSessionID(storageUsername, storagePassword);
+
+            if (createdSessionID) {
+              saveUser({ username: storageUsername, password: storagePassword });
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Home" }],
+              });
+            }
+          })
+          .catch((error: IAuthenticationFailedResponse) => {
+            console.log("error", error);
+          });
+      }
+    } catch (e) {
+      console.log("error: ", e);
+    }
+  };
+
+  useEffect((): void => {
+    easyLogin();
+  }, []);
+
   return (
-    <View
+    <SafeAreaView
       style={{
         justifyContent: "center",
         alignItems: "center",
@@ -127,6 +173,8 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       <TouchableOpacity style={button} onPress={handleLogin}>
         <Text style={{ fontSize: 20, color: "white" }}>Login</Text>
       </TouchableOpacity>
-    </View>
+
+      {/* <Text>{loginBefore ? "login before" : "never login before"}</Text> */}
+    </SafeAreaView>
   );
 };

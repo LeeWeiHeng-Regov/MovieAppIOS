@@ -18,15 +18,14 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
     flexDirection: "row",
     width: "100%",
     marginTop: "auto",
-    borderWidth: 2,
+    paddingTop: 4,
+    backgroundColor: "#0CFF00",
   };
 
   const navigatorButton: ViewStyle = {
     flex: 1,
-    padding: 2,
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 10,
   };
 
   const navigatorButtonText: TextStyle = {
@@ -51,14 +50,14 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
         <Text style={navigatorButtonText}> Home </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={{ ...navigatorButton, borderLeftWidth: 2 }}
+        style={navigatorButton}
         disabled={onWatchListPage}
         onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "WatchList" }] })}>
         <Image source={onWatchListPage ? require("../asset/filledBookmark.png") : require("../asset/nonFilledBookmark.png")} style={icon} />
         <Text style={navigatorButtonText}> Watch List </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={{ ...navigatorButton, borderLeftWidth: 2 }}
+        style={navigatorButton}
         disabled={onProfilePage}
         onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Profile" }] })}>
         <Image source={onProfilePage ? require("../asset/filledProfile.png") : require("../asset/nonFilledProfile.png")} style={icon} />

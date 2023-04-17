@@ -1,5 +1,5 @@
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { Alert, Dimensions, Image, ImageStyle, ScrollView, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Alert, Dimensions, Image, ImageStyle, SafeAreaView, ScrollView, StatusBar, Text, TextStyle, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { Card } from "../component";
@@ -150,6 +150,8 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     fontSize: 30,
     fontWeight: "bold",
     color: "#A200FF",
+    flexWrap: "wrap",
+    width: "90%",
     // marginLeft: 10,
   };
 
@@ -202,8 +204,8 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const ratingStar: ImageStyle = {
-    height: 39,
-    width: 39,
+    height: (Dimensions.get("screen").width - 20) / 10,
+    width: (Dimensions.get("screen").width - 20) / 10,
     resizeMode: "stretch",
   };
 
@@ -281,20 +283,24 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   }, []);
 
   return (
-    <Fragment>
+    <SafeAreaView style={{ backgroundColor: "black" }}>
+      <StatusBar barStyle={"light-content"} />
       {movieDetail !== undefined ? (
-        <ScrollView nestedScrollEnabled={true} style={{ height: "100%", backgroundColor: "black", paddingHorizontal: 10 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+          style={{ height: "100%", backgroundColor: "black", paddingHorizontal: 10, paddingTop: 4, paddingBottom: 80, borderRadius: 8 }}>
           <Image
             source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
-            style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%" }} // 1.618 is golden ratio
+            style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%", borderRadius: 64 }} // 1.618 is golden ratio
           />
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
             <TouchableOpacity style={{ backgroundColor: "yellow", marginTop: 5 }} onPress={handleAddedWatchList}>
               <Image
                 source={addedWatchList ? require("./MovieDetail/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
-                style={{ height: 30, width: 30, resizeMode: "stretch" }}
+                style={{ height: 30, width: 30, resizeMode: "stretch", marginLeft: 2 }}
               />
             </TouchableOpacity>
           </View>
@@ -362,6 +368,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
       ) : (
         <Text>Loading...</Text>
       )}
-    </Fragment>
+    </SafeAreaView>
   );
 };

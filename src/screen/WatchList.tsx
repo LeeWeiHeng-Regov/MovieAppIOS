@@ -1,5 +1,5 @@
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { ScrollView, Text } from "react-native";
+import { SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 
 import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
@@ -28,21 +28,25 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
   }, []);
 
   return (
-    <Fragment>
+    <SafeAreaView style={{ height: "100%", backgroundColor: "black" }}>
+      <StatusBar barStyle={"light-content"} />
+
       <ScrollView>
-        {watchList !== undefined ? (
-          watchList.map((item, index) => {
-            const handleMovieSelected = (): void => {
-              changeSelectedMovieID(item.id);
-              navigation.navigate("MovieDetail");
-            };
-            return <MovieCard key={index} title={item.title} releaseDate={item.release_date} navigationFunction={handleMovieSelected} />;
-          })
-        ) : (
-          <Text>Loading...</Text>
-        )}
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {watchList !== undefined ? (
+            watchList.map((item, index) => {
+              const handleMovieSelected = (): void => {
+                changeSelectedMovieID(item.id);
+                navigation.navigate("MovieDetail");
+              };
+              return <MovieCard key={index} posterPath={item.poster_path} navigationFunction={handleMovieSelected} />;
+            })
+          ) : (
+            <Text>Loading...</Text>
+          )}
+        </View>
       </ScrollView>
       <NavigationBar pageName={"WatchList"} navigationFunction={navigation}></NavigationBar>
-    </Fragment>
+    </SafeAreaView>
   );
 };
