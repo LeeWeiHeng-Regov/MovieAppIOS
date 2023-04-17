@@ -129,7 +129,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
 
             if (createdSessionID) {
               saveUser({ username: storageUsername, password: storagePassword });
-              navigation.navigate("Home");
               navigation.reset({
                 index: 0,
                 routes: [{ name: "Home" }],
@@ -138,7 +137,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
           })
           .catch((error: IAuthenticationFailedResponse) => {
             console.log("error", error);
-            Alert.alert("Failed", error.message);
           });
       }
     } catch (e) {
