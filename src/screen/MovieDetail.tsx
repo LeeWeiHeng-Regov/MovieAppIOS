@@ -1,5 +1,19 @@
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { Alert, Dimensions, Image, ImageStyle, SafeAreaView, ScrollView, StatusBar, Text, TextStyle, View, ViewStyle } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  Image,
+  ImageStyle,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextStyle,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { Card } from "../component";
@@ -25,6 +39,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleSetMovieReviewList = (newMovieReviewList: IMovieReview[]): void => {
     setMovieReviewList(newMovieReviewList);
@@ -283,7 +298,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "black" }}>
+    <SafeAreaView style={{ backgroundColor: "black", ...alignCenter, ...justifyCenter }}>
       <StatusBar barStyle={"light-content"} />
       {movieDetail !== undefined ? (
         <ScrollView
@@ -295,6 +310,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             resizeMode="stretch"
             style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%", borderRadius: 64 }} // 1.618 is golden ratio
           />
+
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
             <TouchableOpacity style={{ backgroundColor: "yellow", marginTop: 5 }} onPress={handleAddedWatchList}>
@@ -312,13 +328,65 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             <Text style={{ ...detail, marginRight: "auto" }}>{movieDetail.vote_average}</Text>
           </View>
 
+          {modalVisible && (
+            <View>
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setModalVisible(!modalVisible);
+                }}>
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    setModalVisible(false);
+                  }}>
+                  <View
+                    style={{
+                      position: "absolute",
+                      height: "100%",
+                      width: "100%",
+                    }}></View>
+                </TouchableWithoutFeedback>
+                <View
+                  style={{
+                    height: "auto",
+                    width: "80%",
+                    ...alignCenter,
+                    ...justifyCenter,
+                    backgroundColor: "black",
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                    alignSelf: "center",
+                    padding: 8,
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    borderColor: "grey",
+                  }}>
+                  <Text style={detailTitle}>Overview: </Text>
+                  <Text style={detail}>{movieDetail.overview}</Text>
+                </View>
+              </Modal>
+            </View>
+          )}
+
           <View style={itemStyle}>
             <Text style={detailTitle}>Release Date: </Text>
             <Text style={detail}>{movieDetail.release_date}</Text>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity
+                style={{ height: 20, width: 96, backgroundColor: "yellow", alignSelf: "flex-end" }}
+                onPress={() => {
+                  setModalVisible(true);
+                }}>
+                <Text>show more</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <Text style={detailTitle}>Overview:</Text>
-          <ScrollView nestedScrollEnabled={true} style={{ minHeight: showMore ? 100 : 60, maxHeight: showMore ? 100 : 60 }}>
+          <ScrollView bounces={false} nestedScrollEnabled={true} style={{ minHeight: showMore ? 100 : 60, maxHeight: showMore ? 100 : 60 }}>
             <View style={itemStyle}>
               <Text style={overviewDetail}>
                 {movieDetail.overview.length < 15 ? (
@@ -338,7 +406,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
           <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : 250, borderRadius: 10 }}>
             <Text style={detailTitle}>Review: </Text>
-            <ScrollView nestedScrollEnabled={true}>{handleDisplayReview(movieReviewList)}</ScrollView>
+            <ScrollView bounces={false} nestedScrollEnabled={true}>
+              {handleDisplayReview(movieReviewList)}
+            </ScrollView>
           </View>
 
           <View style={{ height: "30%", marginTop: 5 }}>
