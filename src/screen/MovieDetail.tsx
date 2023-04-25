@@ -39,7 +39,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [showRate, setShowRate] = useState<boolean>(false);
 
   const handleSetMovieReviewList = (newMovieReviewList: IMovieReview[]): void => {
     setMovieReviewList(newMovieReviewList);
@@ -166,8 +166,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     fontWeight: "bold",
     color: "#A200FF",
     flexWrap: "wrap",
-    width: "90%",
-    // marginLeft: 10,
+    width: "80%",
+    // marginLeft: "auto",
+    // marginRight: "auto",
   };
 
   const detailTitle: TextStyle = {
@@ -213,14 +214,16 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const ratingRow: ViewStyle = {
     flexDirection: "row",
-    backgroundColor: "grey",
+    // backgroundColor: "green",
+    width: "100%",
+    justifyContent: "center",
     borderRadius: 10,
-    marginBottom: 10,
+    marginVertical: 24,
   };
 
   const ratingStar: ImageStyle = {
-    height: (Dimensions.get("screen").width - 20) / 10,
-    width: (Dimensions.get("screen").width - 20) / 10,
+    height: 20,
+    width: 20,
     resizeMode: "stretch",
   };
 
@@ -304,21 +307,35 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
         <ScrollView
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          style={{ height: "100%", backgroundColor: "black", paddingHorizontal: 10, paddingTop: 4, paddingBottom: 80, borderRadius: 8 }}>
+          style={{ backgroundColor: "black", paddingHorizontal: 10 }}>
           <Image
             source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
-            style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%", borderRadius: 64 }} // 1.618 is golden ratio
+            style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%", borderRadius: 32 }} // 1.618 is golden ratio
           />
 
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
-            <TouchableOpacity style={{ backgroundColor: "yellow", marginTop: 5 }} onPress={handleAddedWatchList}>
-              <Image
-                source={addedWatchList ? require("./MovieDetail/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
-                style={{ height: 30, width: 30, resizeMode: "stretch", marginLeft: 2 }}
-              />
-            </TouchableOpacity>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <TouchableOpacity
+                style={{ backgroundColor: "yellow", marginTop: 5, borderRadius: 50, padding: 5, marginRight: 5 }}
+                onPress={handleAddedWatchList}>
+                <Image
+                  source={addedWatchList ? require("./MovieDetail/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
+                  style={{ height: 20, width: 20, resizeMode: "stretch" }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ backgroundColor: "yellow", marginTop: 5, borderRadius: 50, padding: 5 }}
+                onPress={() => {
+                  setShowRate(true);
+                }}>
+                <Image
+                  source={ratingSubmitted ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
+                  style={{ height: 20, width: 20, resizeMode: "stretch" }}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={itemStyle}>
@@ -328,53 +345,42 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             <Text style={{ ...detail, marginRight: "auto" }}>{movieDetail.vote_average}</Text>
           </View>
 
-          {modalVisible && (
-            <View>
-              <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  Alert.alert("Modal has been closed.");
-                  setModalVisible(!modalVisible);
-                }}>
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    setModalVisible(false);
-                  }}>
-                  <View
-                    style={{
-                      position: "absolute",
-                      height: "100%",
-                      width: "100%",
-                    }}></View>
-                </TouchableWithoutFeedback>
-                <View
-                  style={{
-                    height: "auto",
-                    width: "80%",
-                    ...alignCenter,
-                    ...justifyCenter,
-                    backgroundColor: "black",
-                    marginTop: "auto",
-                    marginBottom: "auto",
-                    alignSelf: "center",
-                    padding: 8,
-                    borderRadius: 8,
-                    borderWidth: 2,
-                    borderColor: "grey",
-                  }}>
-                  <Text style={detailTitle}>Overview: </Text>
-                  <Text style={detail}>{movieDetail.overview}</Text>
-                </View>
-              </Modal>
+          <Modal animationType="fade" transparent={true} visible={showMore}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setShowMore(false);
+              }}>
+              <View
+                style={{
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%",
+                }}></View>
+            </TouchableWithoutFeedback>
+            <View
+              style={{
+                height: "auto",
+                width: "80%",
+                ...alignCenter,
+                ...justifyCenter,
+                backgroundColor: "black",
+                marginTop: "auto",
+                marginBottom: "auto",
+                alignSelf: "center",
+                padding: 8,
+                borderRadius: 8,
+                borderWidth: 2,
+                borderColor: "grey",
+              }}>
+              <Text style={detailTitle}>Overview: </Text>
+              <Text style={detail}>{movieDetail.overview}</Text>
             </View>
-          )}
+          </Modal>
 
           <View style={itemStyle}>
             <Text style={detailTitle}>Release Date: </Text>
             <Text style={detail}>{movieDetail.release_date}</Text>
-            <View style={{ flex: 1 }}>
+            {/* <View style={{ flex: 1 }}>
               <TouchableOpacity
                 style={{ height: 20, width: 96, backgroundColor: "yellow", alignSelf: "flex-end" }}
                 onPress={() => {
@@ -382,27 +388,24 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                 }}>
                 <Text>show more</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
 
           <Text style={detailTitle}>Overview:</Text>
-          <ScrollView bounces={false} nestedScrollEnabled={true} style={{ minHeight: showMore ? 100 : 60, maxHeight: showMore ? 100 : 60 }}>
-            <View style={itemStyle}>
-              <Text style={overviewDetail}>
-                {movieDetail.overview.length < 15 ? (
-                  `${movieDetail.overview} `
-                ) : (
-                  <Fragment>
-                    {!showMore ? movieDetail.overview.split(" ").slice(0, 15).join(" ") : `${movieDetail.overview}`}
-
-                    <Text onPress={handleShowMore} style={{ color: "#0049FF", fontSize: 20 }}>
-                      {showMore ? " less..." : " more..."}
-                    </Text>
-                  </Fragment>
-                )}
-              </Text>
-            </View>
-          </ScrollView>
+          <View style={itemStyle}>
+            <Text style={overviewDetail}>
+              {movieDetail.overview.length < 15 ? (
+                `${movieDetail.overview} `
+              ) : (
+                <Fragment>
+                  {movieDetail.overview.split(" ").slice(0, 15).join(" ")}
+                  <Text onPress={handleShowMore} style={{ color: "#0049FF", fontSize: 20 }}>
+                    {" more..."}
+                  </Text>
+                </Fragment>
+              )}
+            </Text>
+          </View>
 
           <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : 250, borderRadius: 10 }}>
             <Text style={detailTitle}>Review: </Text>
@@ -411,12 +414,16 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             </ScrollView>
           </View>
 
-          <View style={{ height: "30%", marginTop: 5 }}>
+          {/* <View style={{ height: "30%", marginTop: 5 }}>
             <Text style={detailTitle}>Rate the Movie: </Text>
             <View style={ratingRow}>
               {ratingRange.map((item, index) => {
                 return (
-                  <TouchableOpacity disabled={ratingSubmitted} key={index} onPress={() => handleSetRating(item)}>
+                  <TouchableOpacity
+                    style={{ borderRadius: 50, backgroundColor: "yellow" }}
+                    disabled={ratingSubmitted}
+                    key={index}
+                    onPress={() => handleSetRating(item)}>
                     <Image
                       style={ratingStar}
                       source={item <= rating ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
@@ -425,15 +432,62 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                 );
               })}
             </View>
+          </View> */}
 
-            <View style={{ width: 250, alignSelf: "center" }}>
-              <TouchableOpacity onPress={handleSetRatingSubmitted} style={submitRatingButton}>
-                <Text style={{ width: 250, paddingVertical: 3, color: "white", textAlign: "center", fontSize: 20 }}>
-                  {ratingSubmitted ? "Delete Rating" : "Submit Rating"}
-                </Text>
-              </TouchableOpacity>
+          <Modal animationType="fade" transparent={true} visible={showRate}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                setShowRate(false);
+              }}>
+              <View
+                style={{
+                  position: "absolute",
+                  height: "100%",
+                  width: "100%",
+                }}></View>
+            </TouchableWithoutFeedback>
+            <View
+              style={{
+                height: "auto",
+                width: "80%",
+                ...alignCenter,
+                ...justifyCenter,
+                backgroundColor: "black",
+                marginTop: "auto",
+                marginBottom: "auto",
+                alignSelf: "center",
+                padding: 8,
+                borderRadius: 8,
+                borderWidth: 2,
+                borderColor: "grey",
+              }}>
+              <Text style={detailTitle}>Rate the Movie </Text>
+              <View style={ratingRow}>
+                {ratingRange.map((item, index) => {
+                  console.log(((Dimensions.get("screen").width - 70) * 0.8) / 10);
+                  return (
+                    <TouchableOpacity
+                      style={{ borderRadius: 50, backgroundColor: "white", padding: 2, margin: 1 }}
+                      disabled={ratingSubmitted}
+                      key={index}
+                      onPress={() => handleSetRating(item)}>
+                      <Image
+                        style={ratingStar}
+                        source={item <= rating ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={{ width: 250, alignSelf: "center" }}>
+                <TouchableOpacity onPress={handleSetRatingSubmitted} style={submitRatingButton}>
+                  <Text style={{ width: 250, paddingVertical: 3, color: "white", textAlign: "center", fontSize: 20 }}>
+                    {ratingSubmitted ? "Delete Rating" : "Submit Rating"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </Modal>
         </ScrollView>
       ) : (
         <Text>Loading...</Text>
