@@ -19,6 +19,7 @@ export const AppStack = () => {
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
             headerShown: true,
+            animationEnabled: false,
           }}
         />
         <Screen
@@ -31,6 +32,7 @@ export const AppStack = () => {
             headerTransparent: false,
             headerShown: true,
             headerStyle: { backgroundColor: "black" },
+            animationEnabled: false,
           }}
         />
         <Screen
@@ -53,6 +55,7 @@ export const AppStack = () => {
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
             headerShown: false,
+            animationEnabled: false,
           }}
         />
         <Screen
@@ -64,6 +67,7 @@ export const AppStack = () => {
             headerTitleStyle: { fontSize: 30 },
             headerTransparent: false,
             headerShown: false,
+            animationEnabled: false,
           }}
         />
       </Navigator>

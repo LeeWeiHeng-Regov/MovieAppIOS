@@ -10,7 +10,6 @@ import { alignCenter, justifyCenter } from "../style/style";
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  let loginButton = useRef();
 
   const { saveUser, handleSetSessionID } = useContext<IContextInput>(Context);
 
@@ -39,7 +38,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     if (username === "" || password === "") {
       Alert.alert("Error", "Please fill in your user name and password!");
     } else {
-      const createdSessionID = await handleCreateSessionID(username, password);
+      const createdSessionID: boolean | undefined = await handleCreateSessionID(username, password);
 
       if (createdSessionID) {
         saveUser({ username: username, password: password });
@@ -109,23 +108,29 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     }
   };
 
-  const easyLogin = async () => {
+  const easyLogin = async (): Promise<void> => {
     let storageUsername: string, storagePassword: string;
     try {
-      const allowEasyLogin: boolean = await AsyncStorage.multiGet(["username", "password"]).then((data) => {
-        const fetchedUsername = data[0][1];
-        const fetchedPassword = data[1][1];
-        if (fetchedUsername !== null && fetchedPassword !== null) {
-          storageUsername = fetchedUsername;
-          storagePassword = fetchedPassword;
-          return true;
-        }
-        return false;
-      });
+      const allowEasyLogin: boolean = await AsyncStorage.multiGet(["username", "password"]).then(
+        (data: readonly [string, string | null][]) => {
+          const fetchedUsername: string | null = (
+            data.find((element: [string, string | null]) => element[0] === "username") as [string, string | null]
+          )[1];
+          const fetchedPassword: string | null = (
+            data.find((element: [string, string | null]) => element[0] === "password") as [string, string | null]
+          )[1];
+          if (fetchedUsername !== null && fetchedPassword !== null) {
+            storageUsername = fetchedUsername;
+            storagePassword = fetchedPassword;
+            return true;
+          }
+          return false;
+        },
+      );
       if (allowEasyLogin) {
         TouchID.authenticate("Login using FaceID", { passcodeFallback: true })
           .then(async (success: boolean) => {
-            const createdSessionID = await handleCreateSessionID(storageUsername, storagePassword);
+            const createdSessionID: boolean | undefined = await handleCreateSessionID(storageUsername, storagePassword);
 
             if (createdSessionID) {
               saveUser({ username: storageUsername, password: storagePassword });
