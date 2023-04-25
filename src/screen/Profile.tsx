@@ -154,41 +154,6 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
           )}
         </View>
 
-        {/* <View style={textBox}>
-          <Text>Date of Birth: </Text>
-          <TextInput
-            editable={editing}
-            keyboardType={"number-pad"}
-            maxLength={2}
-            onBlur={checkDay}
-            onChangeText={(value) => setDay(value)}
-            placeholder="DD">
-            {day}
-          </TextInput>
-          <Text> / </Text>
-          <TextInput
-            editable={editing}
-            keyboardType={"number-pad"}
-            maxLength={2}
-            onBlur={checkMonth}
-            onChangeText={(value) => setMonth(value)}
-            placeholder="MM">
-            {month}
-          </TextInput>
-          <Text> / </Text>
-          <TextInput
-            editable={editing}
-            keyboardType={"number-pad"}
-            maxLength={4}
-            onBlur={checkYear}
-            onChangeText={(value) => setYear(value)}
-            onEndEditing={checkYear}
-            placeholder="YYYY"
-            style={{ color: validYear ? "black" : "red" }}>
-            {year}
-          </TextInput>
-        </View> */}
-
         {!editing && date !== "" && (
           <View style={{ ...textBox, alignItems: "center" }}>
             <Text>Date of Birth: {date}</Text>
