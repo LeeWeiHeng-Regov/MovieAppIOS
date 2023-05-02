@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
-import { Dimensions, GestureResponderEvent, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
+import { Dimensions, GestureResponderEvent, TouchableOpacity, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
 
 import { getImageUrl } from "../config";
+import { green } from "../style";
 import { Card } from "./Card";
 
 interface IMovieCardProps {
@@ -12,24 +13,11 @@ interface IMovieCardProps {
 
 export const MovieCard = ({ posterPath, navigationFunction }: IMovieCardProps): JSX.Element => {
   const movieCard: ViewStyle = {
-    height: ((Dimensions.get("screen").width - 10) * 1.618) / 2,
-    width: (Dimensions.get("screen").width - 10) / 2,
+    height: ((Dimensions.get("screen").width - 32) * 1.618) / 2,
+    width: (Dimensions.get("screen").width - 32) / 2,
     alignSelf: "center",
-    backgroundColor: "lightgreen",
-  };
-
-  const movieTitle: TextStyle = {
-    margin: 5,
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 20,
-  };
-
-  const movieDate: TextStyle = {
-    marginBottom: 5,
-    color: "grey",
-    fontSize: 15,
-    marginLeft: 5,
+    backgroundColor: green,
+    margin: 8,
   };
 
   return (

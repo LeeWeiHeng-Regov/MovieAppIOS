@@ -2,11 +2,25 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { Alert, Dimensions, SafeAreaView, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  Alert,
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
+  SafeAreaView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
+import { scale } from "react-native-size-matters";
 
 import { NavigationBar } from "../component";
 import { Context } from "../context/Context";
+import { backgroundBlack, black, blue, red, white, yellow } from "../style";
 import { alignCenter, justifyCenter } from "../style/style";
 
 export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileProp): JSX.Element => {
@@ -14,6 +28,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   const [editing, setEditing] = useState<boolean>(false);
   const [gender, setGender] = useState<string>("");
   const [date, setDate] = useState<string>(moment().format("DD / MM / YYYY"));
+  const [settingClicked, setSettingClicked] = useState<boolean>(false);
 
   const genderOption = [
     { key: "1", value: "Male" },
@@ -35,26 +50,13 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
     setGender(newGender);
   };
 
-  const submitRatingButton: ViewStyle = {
-    borderWidth: 2,
-    borderRadius: 8,
-    ...justifyCenter,
-    ...alignCenter,
-    alignSelf: "center",
-    backgroundColor: "red",
-    width: 256,
-    height: 40,
-    position: "absolute",
-    marginTop: Dimensions.get("screen").height * 0.85,
-  };
-
   const editButton: ViewStyle = {
     borderWidth: 2,
     borderRadius: 8,
     ...justifyCenter,
     ...alignCenter,
     alignSelf: "center",
-    backgroundColor: editing ? "blue" : "red",
+    backgroundColor: editing ? blue._2 : red,
     width: 256,
     height: 40,
   };
@@ -69,6 +71,14 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: backgroundBlack,
+    borderColor: yellow,
+  };
+
+  const iconStyle: ImageStyle = {
+    height: scale(24),
+    width: scale(24),
+    tintColor: black,
   };
 
   const handleSaveChange = async (): Promise<void> => {
@@ -110,20 +120,82 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
     getStoredData();
   }, []);
 
+  interface IDropDownItemProps {
+    index?: number;
+    image: ImageSourcePropType;
+    title: string;
+    onPressFunction?: () => void;
+  }
+  const dropdownMenuData: IDropDownItemProps[] = [
+    {
+      image: require("./Profile/edit.png"),
+      title: "Edit",
+      onPressFunction: handleSetEditing,
+    },
+    {
+      image: require("./Profile/logout.png"),
+      title: "Logout",
+      onPressFunction: handleLogout,
+    },
+  ];
+
+  const dropdownItem = ({ index, image, title, onPressFunction }: IDropDownItemProps): JSX.Element => {
+    return (
+      <TouchableOpacity style={{ padding: 8, borderWidth: 1 }} key={index} onPress={onPressFunction}>
+        <View style={{ flexDirection: "row", ...alignCenter }}>
+          <Image source={image} resizeMode={"stretch"} style={iconStyle} />
+          <Text style={{ textAlign: "center", fontSize: scale(16) }}>{` ${title} `}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const dropdownMenuStyle: ViewStyle = {
+    borderWidth: 1,
+    marginTop: 4,
+    backgroundColor: yellow,
+  };
+
+  const dropdownMenu = () => {
+    return (
+      <View style={dropdownMenuStyle}>
+        {dropdownMenuData.map((Item, i) => {
+          return dropdownItem({ ...Item, index: i });
+        })}
+      </View>
+    );
+  };
+
   return (
-    <SafeAreaView style={{ height: "100%", backgroundColor: "lightgreen" }}>
-      <View style={{ height: "100%", justifyContent: "center", alignItems: "center" }}>
-        <View style={{ ...textBox, alignItems: "center" }}>
-          <Text>Username: {user.username}</Text>
+    <SafeAreaView style={{ height: "100%", backgroundColor: backgroundBlack }}>
+      <StatusBar barStyle={"light-content"} />
+      {!editing && (
+        <View style={{ zIndex: 1, marginLeft: "auto", margin: 8, alignItems: "flex-end" }}>
+          <TouchableOpacity onPress={() => setSettingClicked(!settingClicked)}>
+            <Image source={require("./Profile/setting.png")} resizeMode={"stretch"} style={{ ...iconStyle, tintColor: yellow }} />
+          </TouchableOpacity>
+
+          {settingClicked && dropdownMenu()}
+        </View>
+      )}
+
+      <View style={{ height: "100%", justifyContent: "center", alignItems: "center", position: "absolute", width: "100%" }}>
+        <Image
+          source={require("./Profile/user.png")}
+          style={{ height: scale(128), width: scale(128), marginBottom: scale(16), tintColor: yellow }}
+        />
+
+        <View style={textBox}>
+          <Text style={{ color: white, fontWeight: "bold" }}>Username: {user.username}</Text>
         </View>
         <View style={{ ...textBox, padding: 0 }}>
-          <Text style={{ marginVertical: 4 }}>Gender: </Text>
+          <Text style={{ color: white, fontWeight: "bold" }}>Gender: </Text>
           {editing ? (
             <View style={{ height: "auto", maxHeight: 120, marginVertical: 0 }}>
               <SelectList
                 boxStyles={{
                   alignItems: "center",
-                  borderColor: "black",
+                  borderColor: yellow,
                   height: 24,
                   justifyContent: "center",
                   marginBottom: 0,
@@ -136,13 +208,16 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
                   height: 24,
                   marginBottom: 0,
                   paddingVertical: 4,
+                  marginLeft: 16,
                   textAlign: "center",
                   width: 128,
+                  color: white,
+                  fontWeight: "bold",
                 }}
                 data={genderOption}
                 dropdownItemStyles={{ marginTop: 0 }}
-                dropdownStyles={{ borderColor: "black", marginTop: 0, marginBottom: 0, paddingTop: 0 }}
-                dropdownTextStyles={{ textAlign: "center" }}
+                dropdownStyles={{ borderColor: yellow, marginTop: 0, marginBottom: 0, paddingTop: 0 }}
+                dropdownTextStyles={{ color: white, fontWeight: "bold", textAlign: "center" }}
                 placeholder={gender}
                 save="value"
                 search={false}
@@ -150,40 +225,44 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
               />
             </View>
           ) : (
-            <TextInput>{gender}</TextInput>
+            <TextInput style={{ color: white, fontWeight: "bold" }}>{gender}</TextInput>
           )}
         </View>
 
         {!editing && date !== "" && (
           <View style={{ ...textBox, alignItems: "center" }}>
-            <Text>Date of Birth: {date}</Text>
+            <Text style={{ color: white, fontWeight: "bold" }}>Date of Birth: {date}</Text>
           </View>
         )}
 
         {editing && (
-          <DateTimePicker
-            value={moment(date, "DD / MM / YYYY").toDate()}
-            maximumDate={moment().toDate()}
-            minimumDate={moment("1923-1-1", "YYYY-MM-DD").toDate()}
-            display={"spinner"}
-            // disabled={!editing}
-            onChange={(_, selectedDate) => {
-              if (selectedDate !== undefined) {
-                setDate(moment(selectedDate).format("DD / MM / YYYY"));
-              }
-            }}
-          />
+          <View style={{ backgroundColor: yellow, width: 256, marginBottom: 16, borderRadius: 8 }}>
+            <DateTimePicker
+              value={moment(date, "DD / MM / YYYY").toDate()}
+              maximumDate={moment().toDate()}
+              minimumDate={moment("1923-1-1", "YYYY-MM-DD").toDate()}
+              display={"spinner"}
+              onChange={(_, selectedDate) => {
+                if (selectedDate !== undefined) {
+                  setDate(moment(selectedDate).format("DD / MM / YYYY"));
+                }
+              }}
+            />
+          </View>
         )}
 
-        <TouchableOpacity onPress={!editing ? handleSetEditing : handleSaveChange} style={editButton}>
-          <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>{editing ? "save" : "Edit"}</Text>
-        </TouchableOpacity>
+        {editing && (
+          <TouchableOpacity onPress={handleSaveChange} style={editButton}>
+            <Text style={{ color: white, textAlign: "center", fontSize: 20 }}>save</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
-      <TouchableOpacity onPress={handleLogout} style={submitRatingButton}>
-        <Text style={{ color: "white", textAlign: "center", fontSize: 20 }}>Logout</Text>
-      </TouchableOpacity>
-
+      {/* {!editing && (
+        <TouchableOpacity onPress={handleLogout} style={submitRatingButton}>
+          <Text style={{ color: white, textAlign: "center", fontSize: 20 }}>Logout</Text>
+        </TouchableOpacity>
+      )} */}
       <NavigationBar pageName={"Profile"} navigationFunction={navigation}></NavigationBar>
     </SafeAreaView>
   );

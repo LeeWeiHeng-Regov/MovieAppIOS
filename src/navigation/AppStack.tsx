@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { Home, Login, MovieDetail, WatchList } from "../screen";
 import { Profile } from "../screen/Profile";
+import { backgroundBlack, white, yellow } from "../style";
 
 const { Navigator, Screen } = createStackNavigator<TAppStackParamList>(); //Destructure the return method from createStackNavigator into two variable
 
@@ -28,10 +29,11 @@ export const AppStack = () => {
           options={{
             title: "My Movie App",
             headerTitleAlign: "center",
-            headerTitleStyle: { fontSize: 30, color: "#0CFF00" },
+            headerTitleStyle: { fontSize: 30, color: yellow },
             headerTransparent: false,
             headerShown: true,
-            headerStyle: { backgroundColor: "black" },
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: backgroundBlack },
             animationEnabled: false,
           }}
         />
@@ -64,9 +66,13 @@ export const AppStack = () => {
           options={{
             title: "Profile",
             headerTitleAlign: "center",
-            headerTitleStyle: { fontSize: 30 },
-            headerTransparent: false,
-            headerShown: false,
+            headerTitleStyle: { fontSize: 30, color: yellow },
+            headerShadowVisible: true,
+            headerTintColor: white,
+            headerTransparent: true,
+            headerShown: true,
+            headerStyle: { backgroundColor: backgroundBlack },
+
             animationEnabled: false,
           }}
         />

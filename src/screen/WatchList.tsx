@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 
@@ -5,10 +6,12 @@ import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
 import { getWatchList } from "../config";
 import { Context } from "../context/Context";
+import { backgroundBlack } from "../style";
 
 export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: WatchListProp): JSX.Element => {
   const [watchList, setWatchList] = useState<IMovie[] | undefined>(undefined);
   const { changeSelectedMovieID, sessionID } = useContext<IContextInput>(Context);
+  const pageFocused = useIsFocused();
 
   const handleSetWatchList = (newWatchList: IMovie[]) => {
     setWatchList(newWatchList);
@@ -24,11 +27,11 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
   };
 
   useEffect((): void => {
-    handleFetchWatchList();
-  }, []);
+    pageFocused && handleFetchWatchList();
+  }, [pageFocused]);
 
   return (
-    <SafeAreaView style={{ height: "100%", backgroundColor: "black" }}>
+    <SafeAreaView style={{ height: "100%", backgroundColor: backgroundBlack }}>
       <StatusBar barStyle={"light-content"} />
 
       <ScrollView>

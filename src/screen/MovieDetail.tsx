@@ -10,11 +10,12 @@ import {
   StatusBar,
   Text,
   TextStyle,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { scale } from "react-native-size-matters";
 
 import { Card } from "../component";
 import {
@@ -28,6 +29,7 @@ import {
   Url,
 } from "../config";
 import { Context } from "../context/Context";
+import { backgroundBlack, black, blue, blueWhite, green, red, white, yellow } from "../style";
 import { alignCenter, justifyCenter } from "../style/style";
 
 export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: MovieDetailProp): JSX.Element => {
@@ -164,22 +166,19 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const movieTitle: TextStyle = {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#A200FF",
+    color: blue._1,
     flexWrap: "wrap",
     width: "80%",
-    // marginLeft: "auto",
-    // marginRight: "auto",
   };
 
   const detailTitle: TextStyle = {
-    // color: "#FFFF00",
-    color: "lightgreen",
+    color: green,
     fontSize: 20,
     fontWeight: "bold",
   };
 
   const detail: TextStyle = {
-    color: "#FFFF00",
+    color: yellow,
     fontSize: 20,
   };
 
@@ -189,7 +188,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const overviewDetail: TextStyle = {
-    color: "yellow",
+    color: yellow,
     fontSize: 18,
     lineHeight: 20,
   };
@@ -198,23 +197,22 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginBottom: 10,
-    backgroundColor: "#CFC136",
+    backgroundColor: yellow,
   };
 
   const reviewAuthor: TextStyle = {
-    color: "black",
+    color: black,
     fontSize: 18,
     fontWeight: "bold",
   };
 
   const reviewContent: TextStyle = {
-    color: "black",
+    color: black,
     fontSize: 15,
   };
 
   const ratingRow: ViewStyle = {
     flexDirection: "row",
-    // backgroundColor: "green",
     width: "100%",
     justifyContent: "center",
     borderRadius: 10,
@@ -222,28 +220,38 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const ratingStar: ImageStyle = {
-    height: 20,
-    width: 20,
+    height: scale(20),
+    width: scale(20),
     resizeMode: "stretch",
+  };
+
+  const functionButton: ViewStyle = {
+    borderRadius: 50,
+    backgroundColor: yellow,
+    margin: 1,
+    marginTop: 5,
+    height: scale(30),
+    width: scale(30),
+    ...alignCenter,
+    ...justifyCenter,
   };
 
   const submitRatingButton: ViewStyle = {
     borderWidth: 2,
     borderRadius: 10,
-    // flexWrap: "wrap",
     ...justifyCenter,
     ...alignCenter,
     alignSelf: "center",
-    backgroundColor: ratingSubmitted ? "red" : "blue",
+    backgroundColor: ratingSubmitted ? red : blue._2,
     marginBottom: 5,
     width: 250,
   };
 
   const handleDisplayReview = (movieReviewList: IMovieReview[] | undefined) => {
     if (movieReviewList === undefined) {
-      return <Text style={{ color: "white" }}>Loading...</Text>;
+      return <Text style={{ color: white }}>Loading...</Text>;
     } else if (movieReviewList !== undefined && movieReviewList.length === 0) {
-      return <Text style={{ color: "white" }}>No Review for this movie yet</Text>;
+      return <Text style={{ color: white }}>No Review for this movie yet</Text>;
     } else {
       return movieReviewList.map((review, index) => {
         return (
@@ -301,13 +309,13 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "black", ...alignCenter, ...justifyCenter }}>
+    <SafeAreaView style={{ backgroundColor: backgroundBlack, ...alignCenter, ...justifyCenter }}>
       <StatusBar barStyle={"light-content"} />
       {movieDetail !== undefined ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          style={{ backgroundColor: "black", paddingHorizontal: 10 }}>
+          style={{ backgroundColor: backgroundBlack, paddingHorizontal: 10 }}>
           <Image
             source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
@@ -316,23 +324,21 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <TouchableOpacity
-                style={{ backgroundColor: "yellow", marginTop: 5, borderRadius: 50, padding: 5, marginRight: 5 }}
-                onPress={handleAddedWatchList}>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity style={functionButton} onPress={handleAddedWatchList}>
                 <Image
                   source={addedWatchList ? require("./MovieDetail/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
-                  style={{ height: 20, width: 20, resizeMode: "stretch" }}
+                  style={ratingStar}
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={{ backgroundColor: "yellow", marginTop: 5, borderRadius: 50, padding: 5 }}
+                style={functionButton}
                 onPress={() => {
                   setShowRate(true);
                 }}>
                 <Image
                   source={ratingSubmitted ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
-                  style={{ height: 20, width: 20, resizeMode: "stretch" }}
+                  style={ratingStar}
                 />
               </TouchableOpacity>
             </View>
@@ -359,18 +365,18 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             </TouchableWithoutFeedback>
             <View
               style={{
-                height: "auto",
-                width: "80%",
                 ...alignCenter,
                 ...justifyCenter,
-                backgroundColor: "black",
-                marginTop: "auto",
-                marginBottom: "auto",
                 alignSelf: "center",
-                padding: 8,
+                backgroundColor: backgroundBlack,
+                borderColor: blueWhite,
                 borderRadius: 8,
                 borderWidth: 2,
-                borderColor: "grey",
+                height: "auto",
+                marginBottom: "auto",
+                marginTop: "auto",
+                padding: 8,
+                width: "80%",
               }}>
               <Text style={detailTitle}>Overview: </Text>
               <Text style={detail}>{movieDetail.overview}</Text>
@@ -380,15 +386,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
           <View style={itemStyle}>
             <Text style={detailTitle}>Release Date: </Text>
             <Text style={detail}>{movieDetail.release_date}</Text>
-            {/* <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                style={{ height: 20, width: 96, backgroundColor: "yellow", alignSelf: "flex-end" }}
-                onPress={() => {
-                  setModalVisible(true);
-                }}>
-                <Text>show more</Text>
-              </TouchableOpacity>
-            </View> */}
           </View>
 
           <Text style={detailTitle}>Overview:</Text>
@@ -399,7 +396,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               ) : (
                 <Fragment>
                   {movieDetail.overview.split(" ").slice(0, 15).join(" ")}
-                  <Text onPress={handleShowMore} style={{ color: "#0049FF", fontSize: 20 }}>
+                  <Text onPress={handleShowMore} style={{ color: blue._2, fontSize: 20 }}>
                     {" more..."}
                   </Text>
                 </Fragment>
@@ -413,26 +410,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               {handleDisplayReview(movieReviewList)}
             </ScrollView>
           </View>
-
-          {/* <View style={{ height: "30%", marginTop: 5 }}>
-            <Text style={detailTitle}>Rate the Movie: </Text>
-            <View style={ratingRow}>
-              {ratingRange.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    style={{ borderRadius: 50, backgroundColor: "yellow" }}
-                    disabled={ratingSubmitted}
-                    key={index}
-                    onPress={() => handleSetRating(item)}>
-                    <Image
-                      style={ratingStar}
-                      source={item <= rating ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View> */}
 
           <Modal animationType="fade" transparent={true} visible={showRate}>
             <TouchableWithoutFeedback
@@ -448,26 +425,25 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             </TouchableWithoutFeedback>
             <View
               style={{
-                height: "auto",
-                width: "80%",
                 ...alignCenter,
                 ...justifyCenter,
-                backgroundColor: "black",
-                marginTop: "auto",
-                marginBottom: "auto",
                 alignSelf: "center",
-                padding: 8,
+                backgroundColor: backgroundBlack,
+                borderColor: blueWhite,
                 borderRadius: 8,
                 borderWidth: 2,
-                borderColor: "grey",
+                height: "auto",
+                marginBottom: "auto",
+                marginTop: "auto",
+                padding: 8,
+                width: "80%",
               }}>
               <Text style={detailTitle}>Rate the Movie </Text>
               <View style={ratingRow}>
                 {ratingRange.map((item, index) => {
-                  console.log(((Dimensions.get("screen").width - 70) * 0.8) / 10);
                   return (
                     <TouchableOpacity
-                      style={{ borderRadius: 50, backgroundColor: "white", padding: 2, margin: 1 }}
+                      style={{ borderRadius: 50, backgroundColor: white, padding: 2, margin: 1 }}
                       disabled={ratingSubmitted}
                       key={index}
                       onPress={() => handleSetRating(item)}>
@@ -481,7 +457,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               </View>
               <View style={{ width: 250, alignSelf: "center" }}>
                 <TouchableOpacity onPress={handleSetRatingSubmitted} style={submitRatingButton}>
-                  <Text style={{ width: 250, paddingVertical: 3, color: "white", textAlign: "center", fontSize: 20 }}>
+                  <Text style={{ width: 250, paddingVertical: 3, color: white, textAlign: "center", fontSize: 20 }}>
                     {ratingSubmitted ? "Delete Rating" : "Submit Rating"}
                   </Text>
                 </TouchableOpacity>

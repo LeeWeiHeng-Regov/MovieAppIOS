@@ -5,6 +5,7 @@ import TouchID from "react-native-touch-id";
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, Url } from "../config";
 import { Context } from "../context/Context";
+import { blue, green, white } from "../style";
 import { alignCenter, justifyCenter } from "../style/style";
 
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
@@ -20,8 +21,8 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
     height: 45,
     ...alignCenter,
     ...justifyCenter,
-    backgroundColor: "blue",
-    borderColor: "blue",
+    backgroundColor: blue._2,
+    borderColor: blue._2,
   };
 
   const textBoxStyle: ViewStyle = {
@@ -158,7 +159,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       style={{
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "lightgreen",
+        backgroundColor: green,
         flex: 1,
       }}>
       <TextInput
@@ -176,7 +177,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
         value={password}></TextInput>
 
       <TouchableOpacity style={button} onPress={handleLogin}>
-        <Text style={{ fontSize: 20, color: "white" }}>Login</Text>
+        <Text style={{ fontSize: 20, color: white }}>Login</Text>
       </TouchableOpacity>
 
       {/* <Text>{loginBefore ? "login before" : "never login before"}</Text> */}

@@ -5,6 +5,7 @@ import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
 import { APIKey, getPopularMovie, getTopRatedMovie, getTrendingMovieListUrl, getUpcomingMovie, Url } from "../config";
 import { Context } from "../context/Context";
+import { backgroundBlack, black, blueWhite, red, white, yellow } from "../style";
 import { alignCenter, justifyCenter } from "../style/style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
@@ -30,10 +31,10 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   };
 
   const clickedTextBoxStyle: TextStyle = {
-    borderColor: "grey",
+    borderColor: blueWhite,
     borderRadius: 30,
     borderWidth: 4,
-    color: "white",
+    color: white,
     height: 50,
     marginVertical: 2,
     paddingHorizontal: 20,
@@ -41,10 +42,10 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   };
 
   const unclickedTextBoxStyle: TextStyle = {
-    borderColor: "grey",
+    borderColor: blueWhite,
     borderRadius: 30,
     borderWidth: 4,
-    color: "white",
+    color: white,
     height: 50,
     marginVertical: 2,
     paddingHorizontal: 20,
@@ -54,8 +55,8 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   const cancelButton: ViewStyle = {
     ...alignCenter,
     ...justifyCenter,
-    backgroundColor: "red",
-    borderColor: "red",
+    backgroundColor: red,
+    borderColor: red,
     borderRadius: 30,
     borderWidth: 2,
     height: 50,
@@ -73,10 +74,8 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   const movieFilter: ViewStyle = {
     ...alignCenter,
     ...justifyCenter,
-    backgroundColor: "green",
-    // color: "yellow",
+    backgroundColor: yellow,
     padding: 4,
-    borderWidth: 1,
     borderRadius: 8,
     marginHorizontal: 10,
   };
@@ -95,7 +94,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   }, []);
 
   return (
-    <SafeAreaView style={{ height: "100%", backgroundColor: "black" }}>
+    <SafeAreaView style={{ height: "100%", backgroundColor: backgroundBlack }}>
       <StatusBar barStyle={"light-content"} />
 
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
@@ -104,7 +103,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
           onFocus={() => setClicked(true)}
           onBlur={() => setClicked(false)}
           placeholder="Search..."
-          placeholderTextColor="white"
+          placeholderTextColor={white}
           value={searchPhrase}
           style={clicked ? clickedTextBoxStyle : unclickedTextBoxStyle}></TextInput>
         {clicked ? (
@@ -147,7 +146,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
 
               return (
                 <View key={index} style={movieFilter}>
-                  <Text style={{ color: "white" }} onPress={item === selectedFilterType ? undefined : handlePress}>
+                  <Text style={{ color: black }} onPress={item === selectedFilterType ? undefined : handlePress}>
                     {item}
                   </Text>
                 </View>

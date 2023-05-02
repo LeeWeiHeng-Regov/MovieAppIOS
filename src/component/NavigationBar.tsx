@@ -2,6 +2,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React, { FunctionComponent } from "react";
 import { Image, ImageStyle, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 
+import { black, yellow } from "../style";
+
 type TPageName = "Home" | "WatchList" | "Profile";
 
 interface INavigationBarProp {
@@ -19,7 +21,7 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
     width: "100%",
     marginTop: "auto",
     paddingTop: 4,
-    backgroundColor: "#0CFF00",
+    backgroundColor: yellow,
   };
 
   const navigatorButton: ViewStyle = {
@@ -29,7 +31,7 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
   };
 
   const navigatorButtonText: TextStyle = {
-    color: "black",
+    color: black,
     fontSize: 10,
     textAlign: "center",
   };
