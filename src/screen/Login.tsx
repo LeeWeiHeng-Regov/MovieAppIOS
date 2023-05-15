@@ -1,24 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { Fragment, FunctionComponent, useContext, useEffect, useRef, useState } from "react";
-import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, ViewStyle } from "react-native";
+import React, { FunctionComponent, useContext, useEffect, useRef, useState } from "react";
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import TouchID from "react-native-touch-id";
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, Url } from "../config";
 import { Context } from "../context/Context";
-import { blue, green, white } from "../style";
-import { alignCenter, justifyCenter } from "../style/style";
+import { backgroundBlack, blue, green, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
+import { alignCenter, br, bw, justifyCenter } from "../style/style";
 
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  // const [editing, setEditing] = useState<boolean>(false);
 
   const { saveUser, handleSetSessionID } = useContext<IContextInput>(Context);
 
   const button: ViewStyle = {
-    borderWidth: 2,
-    borderRadius: 10,
-    width: "20%",
-    height: 45,
+    borderWidth: bw,
+    borderRadius: br,
+    width: sw80,
+    height: sh40,
     ...alignCenter,
     ...justifyCenter,
     backgroundColor: blue._2,
@@ -26,13 +28,12 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
   };
 
   const textBoxStyle: ViewStyle = {
-    marginVertical: "auto",
-    borderWidth: 2,
-    borderRadius: 10,
-    width: "80%",
-    height: "5%",
-    marginBottom: 5,
-    paddingHorizontal: 8,
+    borderWidth: bw,
+    borderRadius: br,
+    width: sw256,
+    height: sh40,
+    marginBottom: sh8,
+    paddingLeft: sw8,
   };
 
   const handleLogin = async (): Promise<void> => {
@@ -156,31 +157,57 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
 
   return (
     <SafeAreaView
+      edges={["top"]}
       style={{
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: green,
-        flex: 1,
       }}>
-      <TextInput
-        onChangeText={(value) => setUsername(value)}
-        placeholder="Please enter your user name*"
-        placeholderTextColor="#6B6B6B"
-        style={{ ...textBoxStyle, marginTop: "50%" }}
-        value={username}></TextInput>
-      <TextInput
-        onChangeText={(value) => setPassword(value)}
-        placeholder="Please enter your password*"
-        placeholderTextColor="#6B6B6B"
-        style={textBoxStyle}
-        secureTextEntry={true}
-        value={password}></TextInput>
-
-      <TouchableOpacity style={button} onPress={handleLogin}>
-        <Text style={{ fontSize: 20, color: white }}>Login</Text>
-      </TouchableOpacity>
-
-      {/* <Text>{loginBefore ? "login before" : "never login before"}</Text> */}
+      <ScrollView
+        // onScroll={!editing ? }
+        keyboardShouldPersistTaps={"handled"}
+        scrollsToTop={true}
+        scrollEnabled={true}
+        bounces={false}
+        style={{ width: "100%", height: "100%" }}
+        contentContainerStyle={{}}
+        showsVerticalScrollIndicator={false}>
+        <View style={{ alignItems: "center", borderColor: "blue" }}>
+          <Text style={{ fontSize: 30, marginTop: 160, fontWeight: "bold" }}>Login</Text>
+          <View style={{ height: sh128 }} />
+          <TextInput
+            onChangeText={(value) => setUsername(value)}
+            // onFocus={() => setEditing(true)}
+            // onBlur={() => setEditing(false)}
+            placeholder="Please enter your username*"
+            placeholderTextColor={backgroundBlack}
+            style={{ ...textBoxStyle, marginTop: "50%" }}
+            value={username}
+          />
+          <TextInput
+            onChangeText={(value) => setPassword(value)}
+            // onFocus={() => setEditing(true)}
+            // onBlur={() => setEditing(false)}
+            placeholder="Please enter your password*"
+            placeholderTextColor={backgroundBlack}
+            style={textBoxStyle}
+            secureTextEntry={true}
+            value={password}
+          />
+          <TouchableOpacity style={button} onPress={handleLogin}>
+            <Text style={{ fontSize: 20, color: white }}>Login</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ ...alignCenter }}>
+          <Text>
+            Do not have an account yet?{" "}
+            <Text onPress={() => {}} style={{ textDecorationLine: "underline" }}>
+              sign up
+            </Text>{" "}
+            now!
+          </Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

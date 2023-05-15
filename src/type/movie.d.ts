@@ -90,34 +90,6 @@ declare interface IMovieDetail {
   vote_average: number;
   vote_count: number;
 }
-const dt = {
-  adult: false,
-  backdrop_path: null,
-  belongs_to_collection: null,
-  budget: 0,
-  genres: [],
-  homepage: "",
-  id: 1114184,
-  imdb_id: "tt23119022",
-  original_language: "en",
-  original_title: "Into Nowhere",
-  overview:
-    "Two friends rekindle their bond as they embark on a journey with no destination. Elle and Brett are two long-time friends in their mid-20s whose jobs and relationships have caused them to drift apart. After Elle has a tough day, Brett off-handedly suggests she go for a drive to clear her mind. Little does he realize she'll heed his advice and take him along for the ride. In the isolation of the car,. they not only face the reality of their individual situations, but they also confront the effects their situations have had on their relationship. This is a story of a rekindled friendship and learning to live in limbo.",
-  popularity: 0,
-  poster_path: null,
-  production_companies: [],
-  production_countries: [],
-  release_date: "",
-  revenue: 0,
-  runtime: 26,
-  spoken_languages: [],
-  status: "Released",
-  tagline: "Sometimes It's Better Not to Know Where You're Going!",
-  title: "Into Nowhere",
-  video: false,
-  vote_average: 0,
-  vote_count: 0,
-};
 
 declare interface IMovieList {
   page: number;

@@ -5,7 +5,6 @@ import {
   Image,
   ImageStyle,
   Modal,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   Text,
@@ -15,7 +14,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { scale } from "react-native-size-matters";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Card } from "../component";
 import {
@@ -29,19 +28,45 @@ import {
   Url,
 } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, black, blue, blueWhite, green, red, white, yellow } from "../style";
-import { alignCenter, justifyCenter } from "../style/style";
+import {
+  backgroundBlack,
+  black,
+  blue,
+  blueWhite,
+  green,
+  sh16,
+  sh20,
+  sh24,
+  sh256,
+  sh32,
+  sh4,
+  sh48,
+  sw1,
+  sw16,
+  sw2,
+  sw24,
+  sw32,
+  sw344,
+  sw368,
+  sw7,
+  sw8,
+  white,
+  yellow,
+} from "../style";
+import { alignCenter, br, bw, justifyCenter } from "../style/style";
 
 export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: MovieDetailProp): JSX.Element => {
   const { selectedMovieID, sessionID } = useContext<IContextInput>(Context);
   const [movieDetail, setMovieDetail] = useState<IMovieDetail | undefined>(undefined);
   const [movieReviewList, setMovieReviewList] = useState<IMovieReview[] | undefined>(undefined);
   const [addedWatchList, setAddedWatchList] = useState<boolean>(false);
-  const [rating, setRating] = useState<number>(3);
+  const [rating, setRating] = useState<number>(0);
+  const [previousRating, setPreviousRating] = useState<number>(0);
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [showRate, setShowRate] = useState<boolean>(false);
+  const [ref, setRef] = useState<ScrollView | null>(null);
 
   const handleSetMovieReviewList = (newMovieReviewList: IMovieReview[]): void => {
     setMovieReviewList(newMovieReviewList);
@@ -52,7 +77,11 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const handleSetRating = (newRating: number): void => {
-    setRating(newRating);
+    if (newRating === rating) {
+      setRating(0);
+    } else {
+      setRating(newRating);
+    }
   };
 
   const handleAddToWatchListDB = async (): Promise<boolean> => {
@@ -81,12 +110,12 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const handleAddedWatchList = async (): Promise<void> => {
     const success: boolean = await handleAddToWatchListDB();
     if (success) {
-      if (addedWatchList) {
-        // initially movie is in watchlist but now want to remove
-        Alert.alert("Success", "Removed from Watch List");
-      } else {
-        Alert.alert("Success", "Added to Watch List");
-      }
+      // if (addedWatchList) {
+      //   // initially movie is in watchlist but now want to remove
+      //   // Alert.alert("Success", "Removed from Watch List");
+      // } else {
+      //   // Alert.alert("Success", "Added to Watch List");
+      // }
       setAddedWatchList(!addedWatchList);
     } else if (!success) {
       if (addedWatchList) {
@@ -138,23 +167,28 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const handleSetRatingSubmitted = async (): Promise<void> => {
-    let success: boolean;
-    if (ratingSubmitted) {
-      // if there is rating already and you want to remove it
-      success = await handleDeleteRatingDB();
-      if (success) {
-        Alert.alert("Success!", "rating deleted");
-        setRatingSubmitted(!ratingSubmitted);
-      } else {
-        Alert.alert("Failed!", "unable to delete rating");
+    let success;
+    if (rating !== 0) {
+      if (rating !== previousRating) {
+        success = await handlePostRatingDB();
+        if (success) {
+          // Alert.alert("Success!", "Added rating");
+          setRatingSubmitted(true);
+          setPreviousRating(rating);
+        } else {
+          Alert.alert("Failed!", "unable to add rating, please contact customer service");
+        }
       }
-    } else {
-      success = await handlePostRatingDB();
-      if (success) {
-        Alert.alert("Success!", "Added rating");
-        setRatingSubmitted(!ratingSubmitted);
-      } else {
-        Alert.alert("Failed!", "unable to add rating");
+    } else if (rating === 0) {
+      if (ratingSubmitted) {
+        success = await handleDeleteRatingDB();
+        if (success) {
+          // Alert.alert("Success!", "Deleted rating");
+          setRatingSubmitted(false);
+          setPreviousRating(rating);
+        } else {
+          Alert.alert("Failed!", "unable to delete rating, please contact customer service");
+        }
       }
     }
   };
@@ -164,105 +198,133 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const movieTitle: TextStyle = {
-    fontSize: 30,
+    fontSize: sh32,
     fontWeight: "bold",
     color: blue._1,
     flexWrap: "wrap",
-    width: "80%",
-  };
-
-  const detailTitle: TextStyle = {
-    color: green,
-    fontSize: 20,
-    fontWeight: "bold",
-  };
-
-  const detail: TextStyle = {
-    color: yellow,
-    fontSize: 20,
+    width: sw344,
   };
 
   const itemStyle: ViewStyle = {
     flexDirection: "row",
     flexWrap: "wrap",
+    alignItems: "baseline",
+  };
+
+  const detailTitle: TextStyle = {
+    color: green,
+    fontSize: sh20,
+    fontWeight: "bold",
+    // backgroundColor: "blue",
+    lineHeight: sh20,
+  };
+
+  const detail: TextStyle = {
+    color: yellow,
+    fontSize: sh16,
+    lineHeight: sh16,
+    // backgroundColor: "red",
   };
 
   const overviewDetail: TextStyle = {
     color: yellow,
-    fontSize: 18,
-    lineHeight: 20,
+    fontSize: sh16,
+    lineHeight: sh16,
   };
 
   const movieReviewCard: ViewStyle = {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginBottom: 10,
+    paddingHorizontal: sw8,
+    marginHorizontal: sw8,
+    paddingVertical: sh4,
+    // marginBottom: sh8,
     backgroundColor: yellow,
+    width: sw368,
+    height: sh256,
   };
 
   const reviewAuthor: TextStyle = {
     color: black,
-    fontSize: 18,
+    fontSize: sh20,
     fontWeight: "bold",
   };
 
   const reviewContent: TextStyle = {
     color: black,
-    fontSize: 15,
+    fontSize: sh16,
   };
 
   const ratingRow: ViewStyle = {
     flexDirection: "row",
-    width: "100%",
-    justifyContent: "center",
-    borderRadius: 10,
-    marginVertical: 24,
+    ...alignCenter,
+    borderRadius: sw8,
+    marginVertical: sw8,
+    height: sh48,
   };
 
   const ratingStar: ImageStyle = {
-    height: scale(20),
-    width: scale(20),
+    height: sh24,
+    width: sw24,
     resizeMode: "stretch",
   };
 
   const functionButton: ViewStyle = {
-    borderRadius: 50,
-    backgroundColor: yellow,
-    margin: 1,
-    marginTop: 5,
-    height: scale(30),
-    width: scale(30),
+    borderRadius: sw16,
+    backgroundColor: white,
+    margin: sw1,
+    marginTop: sh4,
+    height: sw32,
+    width: sw32,
     ...alignCenter,
     ...justifyCenter,
   };
 
-  const submitRatingButton: ViewStyle = {
-    borderWidth: 2,
-    borderRadius: 10,
-    ...justifyCenter,
-    ...alignCenter,
-    alignSelf: "center",
-    backgroundColor: ratingSubmitted ? red : blue._2,
-    marginBottom: 5,
-    width: 250,
+  const iconStyle: ImageStyle = {
+    height: sw24,
+    width: sw24,
+    tintColor: yellow,
+  };
+
+  const handleStyle = (index: number, listLength: number): ViewStyle => {
+    switch (index) {
+      case 0:
+        return { ...movieReviewCard, marginLeft: 24 };
+      case listLength - 1:
+        return { ...movieReviewCard, marginRight: 24 };
+      default:
+        return movieReviewCard;
+    }
   };
 
   const handleDisplayReview = (movieReviewList: IMovieReview[] | undefined) => {
     if (movieReviewList === undefined) {
       return <Text style={{ color: white }}>Loading...</Text>;
-    } else if (movieReviewList !== undefined && movieReviewList.length === 0) {
-      return <Text style={{ color: white }}>No Review for this movie yet</Text>;
-    } else {
-      return movieReviewList.map((review, index) => {
+    } else if (movieReviewList !== undefined) {
+      if (movieReviewList.length === 0) {
+        return <Text style={{ color: white }}>No Review for this movie yet</Text>;
+      } else {
         return (
-          <Card key={index} style={movieReviewCard}>
-            <Fragment>
-              <Text style={reviewAuthor}>By {review.author}: </Text>
-              <Text style={reviewContent}>{review.content}</Text>
-            </Fragment>
-          </Card>
+          <ScrollView
+            ref={(ref) => setRef(ref)}
+            bounces={false}
+            // pagingEnabled={true}
+            snapToInterval={384}
+            decelerationRate={"fast"}
+            disableIntervalMomentum={true}
+            nestedScrollEnabled={true}
+            horizontal={true}
+            style={{ borderRadius: br, width: "100%" }}
+            contentContainerStyle={{ flexDirection: "row", minWidth: "100%", backgroundColor: black }}>
+            {movieReviewList.map((review, index) => (
+              <Card key={index} style={handleStyle(index, movieReviewList.length)}>
+                <Fragment>
+                  <Text style={reviewAuthor}>By {review.author}: </Text>
+                  <Text style={reviewContent}>{review.content}</Text>
+                </Fragment>
+              </Card>
+            ))}
+          </ScrollView>
         );
-      });
+      }
     }
   };
 
@@ -284,6 +346,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
       if (typeof jsonResponse.rated === "object") {
         handleSetRating(jsonResponse.rated.value);
+        setPreviousRating(jsonResponse.rated.value);
         setRatingSubmitted(true);
       }
     } catch (err) {
@@ -309,18 +372,27 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: backgroundBlack, ...alignCenter, ...justifyCenter }}>
+    <SafeAreaView edges={["top", "bottom"]} style={{ backgroundColor: backgroundBlack, ...alignCenter, ...justifyCenter }}>
       <StatusBar barStyle={"light-content"} />
       {movieDetail !== undefined ? (
         <ScrollView
+          bounces={false}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
-          style={{ backgroundColor: backgroundBlack, paddingHorizontal: 10 }}>
+          style={{ backgroundColor: backgroundBlack, paddingHorizontal: sw7, width: "100%" }}>
+          <View style={{ zIndex: 1, margin: 8, position: "absolute", alignSelf: "flex-start" }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <Image source={require("./MovieDetail/back.png")} resizeMode={"stretch"} style={iconStyle} />
+            </TouchableOpacity>
+          </View>
           <Image
             source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
-            style={{ height: (Dimensions.get("window").width - 20) * 1.618, width: "100%", borderRadius: 32 }} // 1.618 is golden ratio
-          />
+            style={{ height: (Dimensions.get("screen").width - 20) * 1.618, width: "100%", borderRadius: sw32 }} // 1.618 is golden ratio
+          ></Image>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
@@ -346,9 +418,24 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
           <View style={itemStyle}>
             <Text style={detailTitle}>Language: </Text>
-            <Text style={detail}>{movieDetail.original_language}</Text>
+            <Text style={detail}>{movieDetail.original_language.toUpperCase()}</Text>
             <Text style={{ ...detailTitle, marginLeft: "auto" }}>Rating: </Text>
             <Text style={{ ...detail, marginRight: "auto" }}>{movieDetail.vote_average}</Text>
+          </View>
+
+          <View style={itemStyle}>
+            <Text style={detailTitle}>Release Date: </Text>
+            <Text style={detail}>{movieDetail.release_date}</Text>
+          </View>
+
+          <Text style={detailTitle}>Overview:</Text>
+          <View style={itemStyle}>
+            <Text style={overviewDetail}>{movieDetail.overview}</Text>
+          </View>
+
+          <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : sh256 }}>
+            <Text style={detailTitle}>Review: </Text>
+            {handleDisplayReview(movieReviewList)}
           </View>
 
           <Modal animationType="fade" transparent={true} visible={showMore}>
@@ -370,51 +457,24 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                 alignSelf: "center",
                 backgroundColor: backgroundBlack,
                 borderColor: blueWhite,
-                borderRadius: 8,
-                borderWidth: 2,
+                borderRadius: br,
+                borderWidth: bw,
                 height: "auto",
                 marginBottom: "auto",
                 marginTop: "auto",
-                padding: 8,
+                padding: sw8,
                 width: "80%",
               }}>
               <Text style={detailTitle}>Overview: </Text>
-              <Text style={detail}>{movieDetail.overview}</Text>
+              <Text style={{ ...detail, fontSize: 16 }}>{movieDetail.overview}</Text>
             </View>
           </Modal>
-
-          <View style={itemStyle}>
-            <Text style={detailTitle}>Release Date: </Text>
-            <Text style={detail}>{movieDetail.release_date}</Text>
-          </View>
-
-          <Text style={detailTitle}>Overview:</Text>
-          <View style={itemStyle}>
-            <Text style={overviewDetail}>
-              {movieDetail.overview.length < 15 ? (
-                `${movieDetail.overview} `
-              ) : (
-                <Fragment>
-                  {movieDetail.overview.split(" ").slice(0, 15).join(" ")}
-                  <Text onPress={handleShowMore} style={{ color: blue._2, fontSize: 20 }}>
-                    {" more..."}
-                  </Text>
-                </Fragment>
-              )}
-            </Text>
-          </View>
-
-          <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : 250, borderRadius: 10 }}>
-            <Text style={detailTitle}>Review: </Text>
-            <ScrollView bounces={false} nestedScrollEnabled={true}>
-              {handleDisplayReview(movieReviewList)}
-            </ScrollView>
-          </View>
 
           <Modal animationType="fade" transparent={true} visible={showRate}>
             <TouchableWithoutFeedback
               onPress={() => {
                 setShowRate(false);
+                handleSetRatingSubmitted();
               }}>
               <View
                 style={{
@@ -430,12 +490,12 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                 alignSelf: "center",
                 backgroundColor: backgroundBlack,
                 borderColor: blueWhite,
-                borderRadius: 8,
-                borderWidth: 2,
+                borderRadius: br,
+                borderWidth: bw,
                 height: "auto",
                 marginBottom: "auto",
                 marginTop: "auto",
-                padding: 8,
+                padding: sw8,
                 width: "80%",
               }}>
               <Text style={detailTitle}>Rate the Movie </Text>
@@ -443,8 +503,8 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                 {ratingRange.map((item, index) => {
                   return (
                     <TouchableOpacity
-                      style={{ borderRadius: 50, backgroundColor: white, padding: 2, margin: 1 }}
-                      disabled={ratingSubmitted}
+                      style={{ borderRadius: sw16, backgroundColor: white, padding: sw2, margin: sw1 }}
+                      // disabled={ratingSubmitted}
                       key={index}
                       onPress={() => handleSetRating(item)}>
                       <Image
@@ -454,13 +514,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                     </TouchableOpacity>
                   );
                 })}
-              </View>
-              <View style={{ width: 250, alignSelf: "center" }}>
-                <TouchableOpacity onPress={handleSetRatingSubmitted} style={submitRatingButton}>
-                  <Text style={{ width: 250, paddingVertical: 3, color: white, textAlign: "center", fontSize: 20 }}>
-                    {ratingSubmitted ? "Delete Rating" : "Submit Rating"}
-                  </Text>
-                </TouchableOpacity>
               </View>
             </View>
           </Modal>

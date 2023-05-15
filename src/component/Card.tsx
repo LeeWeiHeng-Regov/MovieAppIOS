@@ -1,25 +1,23 @@
 import React, { FunctionComponent } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { View, ViewStyle } from "react-native";
 
-import { black, green } from "../style";
+import { black, br, green, sw4, sw8 } from "../style";
 
 interface ICardProp {
   style?: ViewStyle;
   children?: JSX.Element;
 }
 
-export const Card: FunctionComponent<ICardProp> = (props: ICardProp): JSX.Element => {
-  return <View style={{ ...styles.card, ...props.style }}>{props.children}</View>;
+const card: ViewStyle = {
+  shadowColor: black,
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: sw4,
+  shadowOpacity: 0.26,
+  elevation: sw8,
+  backgroundColor: green,
+  borderRadius: br,
 };
-const styles = StyleSheet.create({
-  card: {
-    shadowColor: black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.26,
-    elevation: 8,
-    backgroundColor: green,
-    borderRadius: 10,
-    margin: 2,
-  },
-});
+
+export const Card: FunctionComponent<ICardProp> = (props: ICardProp): JSX.Element => {
+  return <View style={{ ...card, ...props.style }}>{props.children}</View>;
+};

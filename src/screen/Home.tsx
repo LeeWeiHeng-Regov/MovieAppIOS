@@ -1,19 +1,23 @@
-import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StatusBar, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { SIZE_MATTERS_BASE_WIDTH } from "@env";
+import React, { FunctionComponent, useContext, useEffect, useState } from "react";
+import { Image, Keyboard, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { scale } from "react-native-size-matters/extend";
 
 import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
 import { APIKey, getPopularMovie, getTopRatedMovie, getTrendingMovieListUrl, getUpcomingMovie, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, black, blueWhite, red, white, yellow } from "../style";
-import { alignCenter, justifyCenter } from "../style/style";
+import { backgroundBlack, black, blueWhite, sh16, sh32, sh4, sh48, sw16, sw24, sw32, sw4, sw8, white, yellow } from "../style";
+import { alignCenter, br, justifyCenter } from "../style/style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
   const [searchPhrase, setSearchPhrase] = useState<string>("");
-  const [clicked, setClicked] = useState<boolean>(false);
   const [data, setData] = useState<IMovieList | undefined>(undefined);
   const { changeSelectedMovieID } = useContext<IContextInput>(Context);
   const [selectedFilterType, setSelectedFilterType] = useState<filterType>("Trending");
+  const [typing, setTyping] = useState<boolean>(true);
+  const [showNavigationBar, setShowNavigationBar] = useState<boolean>(true);
 
   type filterType = "Trending" | "Popular" | "Upcoming" | "Top Rated" | "Crayon";
   const movieFilterType: filterType[] = ["Trending", "Popular", "Top Rated", "Upcoming", "Crayon"];
@@ -30,54 +34,30 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
     setSelectedFilterType(newSelectedFilterType);
   };
 
-  const clickedTextBoxStyle: TextStyle = {
+  const searchBarStyle: ViewStyle = {
     borderColor: blueWhite,
-    borderRadius: 30,
-    borderWidth: 4,
-    color: white,
-    height: 50,
-    marginVertical: 2,
-    paddingHorizontal: 20,
-    width: "80%",
-  };
-
-  const unclickedTextBoxStyle: TextStyle = {
-    borderColor: blueWhite,
-    borderRadius: 30,
-    borderWidth: 4,
-    color: white,
-    height: 50,
-    marginVertical: 2,
-    paddingHorizontal: 20,
-    width: "95%",
-  };
-
-  const cancelButton: ViewStyle = {
-    ...alignCenter,
-    ...justifyCenter,
-    backgroundColor: red,
-    borderColor: red,
-    borderRadius: 30,
-    borderWidth: 2,
-    height: 50,
-    marginVertical: 2,
-    width: "15%",
+    borderRadius: sw32,
+    borderWidth: sw4,
+    height: sh48,
+    paddingHorizontal: sw16,
+    width: scale(SIZE_MATTERS_BASE_WIDTH - 16),
+    marginHorizontal: sw8,
   };
 
   const movieFilterList: ViewStyle = {
-    width: "100%",
-    marginTop: 4,
-    marginVertical: 2,
-    borderRadius: 8,
+    width: scale(SIZE_MATTERS_BASE_WIDTH - 16),
+    marginVertical: sh4,
+    marginHorizontal: sw8,
+    borderRadius: br,
   };
 
   const movieFilter: ViewStyle = {
     ...alignCenter,
     ...justifyCenter,
     backgroundColor: yellow,
-    padding: 4,
-    borderRadius: 8,
-    marginHorizontal: 10,
+    padding: sw4,
+    borderRadius: br,
+    marginRight: sw16,
   };
 
   const handleFetchTrendingMovieList = async (): Promise<void> => {
@@ -93,52 +73,97 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
     handleFetchTrendingMovieList();
   }, []);
 
-  return (
-    <SafeAreaView style={{ height: "100%", backgroundColor: backgroundBlack }}>
-      <StatusBar barStyle={"light-content"} />
+  useEffect(() => {
+    const handleShowNavigationBar = () => setShowNavigationBar(true);
+    const handleHideNavigationBar = () => setShowNavigationBar(false);
 
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+    const KeyboardWillShow = Keyboard.addListener("keyboardWillShow", handleHideNavigationBar);
+    const KeyboardWillHide = Keyboard.addListener("keyboardWillHide", handleShowNavigationBar);
+
+    return () => {
+      KeyboardWillShow.remove();
+      KeyboardWillHide.remove();
+    };
+  }, [typing]);
+
+  return (
+    <SafeAreaView edges={["top"]} style={{ height: "100%", backgroundColor: backgroundBlack }}>
+      <StatusBar barStyle={"light-content"} />
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", ...searchBarStyle }}>
         <TextInput
-          onChangeText={(value) => setSearchPhrase(value)}
-          onFocus={() => setClicked(true)}
-          onBlur={() => setClicked(false)}
+          onChangeText={(value) => {
+            setSearchPhrase(value);
+          }}
+          onFocus={() => setTyping(false)}
+          onBlur={() => setTyping(true)}
           placeholder="Search..."
           placeholderTextColor={white}
           value={searchPhrase}
-          style={clicked ? clickedTextBoxStyle : unclickedTextBoxStyle}></TextInput>
-        {clicked ? (
-          <TouchableOpacity style={cancelButton} onPress={handleCancel}>
-            <Text>Cancel</Text>
+          style={{ fontSize: sh16, width: scale(SIZE_MATTERS_BASE_WIDTH - 88) }}></TextInput>
+        {searchPhrase !== "" && (
+          <TouchableOpacity style={{ marginLeft: sw8 }} onPress={() => setSearchPhrase("")}>
+            <Image style={{ height: sw24, width: sw24 }} resizeMode={"stretch"} source={require("./Home/remove.png")}></Image>
           </TouchableOpacity>
-        ) : null}
+        )}
       </View>
 
       <View>
-        <ScrollView style={movieFilterList} horizontal={true} contentContainerStyle={{ height: 32 }}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          style={movieFilterList}
+          horizontal={true}
+          contentContainerStyle={{ height: sh32 }}>
           <View style={{ flexDirection: "row", ...alignCenter }}>
             {movieFilterType.map((item, index) => {
               const handlePress = async () => {
                 try {
-                  if (item === "Crayon") {
-                    const response = await (
-                      await fetch(
-                        `https://api.themoviedb.org/3/search/movie?api_key=724b5b81a31d70bfaef4c50cd34b6d8b&language=en-US&query=crayon%20Shin-chan`,
-                      )
-                    ).json();
-                    handleSetData(response);
-                  } else if (item === "Trending") {
-                    handleFetchTrendingMovieList();
-                  } else if (item === "Popular") {
-                    const response: IMovieList = await (await fetch(getPopularMovie)).json();
-                    handleSetData(response);
-                  } else if (item === "Top Rated") {
-                    const response: IMovieList = await (await fetch(getTopRatedMovie)).json();
-                    handleSetData(response);
-                  } else if (item === "Upcoming") {
-                    const response: IMovieList = await (await fetch(getUpcomingMovie)).json();
-                    handleSetData(response);
+                  switch (item) {
+                    case "Crayon":
+                      let response = await (
+                        await fetch(
+                          `https://api.themoviedb.org/3/search/movie?api_key=724b5b81a31d70bfaef4c50cd34b6d8b&language=en-US&query=crayon%20Shin-chan`,
+                        )
+                      ).json();
+                      handleSetData(response);
+                      break;
+                    case "Trending":
+                      handleFetchTrendingMovieList();
+                      break;
+                    case "Popular":
+                      response = await (await fetch(getPopularMovie)).json();
+                      handleSetData(response);
+                      break;
+                    case "Top Rated":
+                      response = await (await fetch(getTopRatedMovie)).json();
+                      handleSetData(response);
+                      break;
+                    case "Upcoming":
+                      response = await (await fetch(getUpcomingMovie)).json();
+                      handleSetData(response);
+                      break;
                   }
                   handleSetSelectedFilterType(item);
+
+                  // if (item === "Crayon") {
+                  //   const response = await (
+                  //     await fetch(
+                  //       `https://api.themoviedb.org/3/search/movie?api_key=724b5b81a31d70bfaef4c50cd34b6d8b&language=en-US&query=crayon%20Shin-chan`,
+                  //     )
+                  //   ).json();
+                  //   handleSetData(response);
+                  // } else if (item === "Trending") {
+                  //   handleFetchTrendingMovieList();
+                  // } else if (item === "Popular") {
+                  //   const response: IMovieList = await (await fetch(getPopularMovie)).json();
+                  //   handleSetData(response);
+                  // } else if (item === "Top Rated") {
+                  //   const response: IMovieList = await (await fetch(getTopRatedMovie)).json();
+                  //   handleSetData(response);
+                  // } else if (item === "Upcoming") {
+                  //   const response: IMovieList = await (await fetch(getUpcomingMovie)).json();
+                  //   handleSetData(response);
+                  // }
+                  // handleSetSelectedFilterType(item);
                 } catch (e) {
                   console.log(e);
                 }
@@ -146,7 +171,16 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
 
               return (
                 <View key={index} style={movieFilter}>
-                  <Text style={{ color: black }} onPress={item === selectedFilterType ? undefined : handlePress}>
+                  <Text
+                    style={{
+                      color: black,
+                      fontSize: sh16,
+                      textDecorationLine: item === selectedFilterType ? "underline" : "none",
+                      textDecorationStyle: "solid",
+                      fontWeight: item === selectedFilterType ? "bold" : "normal",
+                    }}
+                    disabled={item === selectedFilterType}
+                    onPress={handlePress}>
                     {item}
                   </Text>
                 </View>
@@ -156,36 +190,14 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
         </ScrollView>
       </View>
 
-      {/* <Fragment>
-        {data !== undefined ? (
-          <FlatList
-            data={data.results}
-            renderItem={({ item, index }) => {
-              const handleNavigation = () => {
-                changeSelectedMovieID(item.id);
-                navigation.navigate("MovieDetail");
-              };
-              return item.title.toLowerCase().includes(searchPhrase.toLowerCase()) ? (
-                <MovieCard key={index} posterPath={item.poster_path} navigationFunction={handleNavigation} />
-              ) : null;
-            }}
-            keyExtractor={(item) => item.id.toString()}
-            style={{ marginBottom: "auto", width: "100%" }}
-            numColumns={2}
-          />
-        ) : (
-          <Text>Loading...</Text>
-        )}
-      </Fragment> */}
-
-      <ScrollView>
+      <ScrollView indicatorStyle="white" style={{ width: "100%" }}>
         <View
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
             height: "100%",
-            alignItems: "flex-start",
-            justifyContent: "flex-start",
+            width: "100%",
+            paddingHorizontal: sw4,
           }}>
           {data !== undefined ? (
             data.results.map((movie, index) => {
@@ -202,8 +214,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
           )}
         </View>
       </ScrollView>
-
-      <NavigationBar pageName={"Home"} navigationFunction={navigation}></NavigationBar>
+      {showNavigationBar && <NavigationBar pageName={"Home"} navigationFunction={navigation}></NavigationBar>}
     </SafeAreaView>
   );
 };

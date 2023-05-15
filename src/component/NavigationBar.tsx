@@ -1,8 +1,8 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { FunctionComponent } from "react";
+import React, { Fragment, FunctionComponent } from "react";
 import { Image, ImageStyle, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 
-import { black, yellow } from "../style";
+import { black, sh12, sh16, sh32, sh4, sw32, yellow } from "../style";
 
 type TPageName = "Home" | "WatchList" | "Profile";
 
@@ -17,11 +17,15 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
   const onProfilePage: boolean = pageName === "Profile";
 
   const navigationBar: ViewStyle = {
+    width: "100%",
+    bottom: 0,
+    backgroundColor: yellow,
+  };
+
+  const iconBar: ViewStyle = {
     flexDirection: "row",
     width: "100%",
-    marginTop: "auto",
-    paddingTop: 4,
-    backgroundColor: yellow,
+    paddingTop: sh4,
   };
 
   const navigatorButton: ViewStyle = {
@@ -32,39 +36,55 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
 
   const navigatorButtonText: TextStyle = {
     color: black,
-    fontSize: 10,
+    fontSize: sh12,
     textAlign: "center",
+    lineHeight: sh16,
   };
 
   const icon: ImageStyle = {
-    height: 30,
-    width: 30,
+    height: sw32,
+    width: sw32,
     resizeMode: "stretch",
   };
 
   return (
     <View style={navigationBar}>
-      <TouchableOpacity
-        style={navigatorButton}
-        disabled={onHomepage}
-        onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Home" }] })}>
-        <Image source={onHomepage ? require("../asset/filledHome.png") : require("../asset/nonFilledHome.png")} style={icon} />
-        <Text style={navigatorButtonText}> Home </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={navigatorButton}
-        disabled={onWatchListPage}
-        onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "WatchList" }] })}>
-        <Image source={onWatchListPage ? require("../asset/filledBookmark.png") : require("../asset/nonFilledBookmark.png")} style={icon} />
-        <Text style={navigatorButtonText}> Watch List </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={navigatorButton}
-        disabled={onProfilePage}
-        onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Profile" }] })}>
-        <Image source={onProfilePage ? require("../asset/filledProfile.png") : require("../asset/nonFilledProfile.png")} style={icon} />
-        <Text style={navigatorButtonText}> Profile </Text>
-      </TouchableOpacity>
+      <View style={iconBar}>
+        <TouchableOpacity
+          style={navigatorButton}
+          disabled={onHomepage}
+          onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Home" }] })}>
+          <Image source={onHomepage ? require("../asset/filledHome.png") : require("../asset/nonFilledHome.png")} style={icon} />
+          <Text style={navigatorButtonText}> Home </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={navigatorButton}
+          disabled={onWatchListPage}
+          onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "WatchList" }] })}>
+          <Image
+            source={onWatchListPage ? require("../asset/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
+            style={icon}
+          />
+          <Text style={navigatorButtonText}> Watch List </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={navigatorButton}
+          disabled={onProfilePage}
+          onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Profile" }] })}>
+          <Image source={onProfilePage ? require("../asset/filledProfile.png") : require("../asset/nonFilledProfile.png")} style={icon} />
+          <Text style={navigatorButtonText}> Profile </Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          height: sh32,
+          backgroundColor: "transparent",
+          // position: "absolute",
+          // bottom: 0,
+          width: "100%",
+          // zIndex: -1,
+        }}
+      />
     </View>
   );
 };

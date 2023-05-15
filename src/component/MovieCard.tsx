@@ -1,27 +1,30 @@
+import { SIZE_MATTERS_BASE_WIDTH } from "@env";
 import React, { Fragment } from "react";
-import { Dimensions, GestureResponderEvent, TouchableOpacity, ViewStyle } from "react-native";
+import { GestureResponderEvent, TouchableOpacity, ViewStyle } from "react-native";
 import FastImage from "react-native-fast-image";
+import { scale } from "react-native-size-matters/extend";
 
 import { getImageUrl } from "../config";
-import { green } from "../style";
+import { black, sh8, sw4 } from "../style";
 import { Card } from "./Card";
 
 interface IMovieCardProps {
   posterPath?: string | null;
+  style?: ViewStyle;
   navigationFunction?: (event: GestureResponderEvent) => void;
 }
 
-export const MovieCard = ({ posterPath, navigationFunction }: IMovieCardProps): JSX.Element => {
+export const MovieCard = ({ posterPath, style: inputStyle, navigationFunction }: IMovieCardProps): JSX.Element => {
   const movieCard: ViewStyle = {
-    height: ((Dimensions.get("screen").width - 32) * 1.618) / 2,
-    width: (Dimensions.get("screen").width - 32) / 2,
-    alignSelf: "center",
-    backgroundColor: green,
-    margin: 8,
+    height: (scale(SIZE_MATTERS_BASE_WIDTH - 24) * 1.618) / 2,
+    width: scale(SIZE_MATTERS_BASE_WIDTH - 24) / 2,
+    backgroundColor: black,
+    marginHorizontal: sw4,
+    marginBottom: sh8,
   };
 
   return (
-    <Card style={movieCard}>
+    <Card style={{ ...movieCard, ...inputStyle }}>
       <Fragment>
         <TouchableOpacity onPress={navigationFunction}>
           <FastImage
