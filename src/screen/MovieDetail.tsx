@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import IconFA from "react-native-vector-icons/FontAwesome";
+import IconF from "react-native-vector-icons/Fontisto";
 
 import { Card, Spacer } from "../component";
 import {
@@ -34,6 +35,7 @@ import {
   blueWhite,
   green,
   red,
+  sh14,
   sh16,
   sh20,
   sh216,
@@ -116,12 +118,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const handleAddedWatchList = async (): Promise<void> => {
     const success: boolean = await handleAddToWatchListDB();
     if (success) {
-      // if (addedWatchList) {
-      //   // initially movie is in watchlist but now want to remove
-      //   // Alert.alert("Success", "Removed from Watch List");
-      // } else {
-      //   // Alert.alert("Success", "Added to Watch List");
-      // }
       setAddedWatchList(!addedWatchList);
     } else if (!success) {
       if (addedWatchList) {
@@ -222,7 +218,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const detailTitle: TextStyle = {
-    color: green,
+    color: black,
     fontSize: sh16,
     fontWeight: "500",
     lineHeight: sh16,
@@ -238,7 +234,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     paddingHorizontal: sw8,
     marginHorizontal: sw8,
     paddingVertical: sh4,
-    // marginBottom: sh8,
     backgroundColor: white,
     shadowOpacity: 0.5,
     width: sw368,
@@ -446,9 +441,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             <Text style={movieTitle}>{movieDetail.title}</Text>
             <View style={{ flexDirection: "row" }}>
               <View style={functionButton}>
-                <IconFA
+                <IconF
                   size={sw24}
-                  name={addedWatchList ? "bookmark" : "bookmark-o"}
+                  name={addedWatchList ? "bookmark-alt" : "bookmark"}
                   // color={addedWatchList ? yellow : black}
                   style={{
                     shadowColor: black,
@@ -482,21 +477,25 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
           <Spacer height={sh4}></Spacer>
 
-          <View style={itemStyle}>
-            <Text style={detailTitle}>Language: </Text>
-            <Text style={detail}>{movieDetail.original_language.toUpperCase()}</Text>
-            <Text style={{ ...detailTitle, marginLeft: "auto" }}>Rating: </Text>
-            <Text style={{ ...detail, marginRight: "auto" }}>{movieDetail.vote_average}</Text>
+          <View style={{ ...itemStyle }}>
+            <IconF name="world-o" size={sh14} />
+            <Spacer width={sw4} />
+            <Text style={{ ...detail }}>{movieDetail.original_language.toUpperCase()}</Text>
+
+            <Spacer width={sw8} />
+
+            <IconF name="date" size={sh14} />
+            <Spacer width={sw4} />
+            <Text style={{ ...detail }}>{movieDetail.release_date}</Text>
+
+            <Spacer width={sw8} />
+
+            <IconFA name="star-o" size={sh16} />
+            <Spacer width={sw4} />
+            <Text style={{ ...detail }}>{movieDetail.vote_average}</Text>
           </View>
 
-          <Spacer height={sh4}></Spacer>
-
-          <View style={itemStyle}>
-            <Text style={detailTitle}>Release Date: </Text>
-            <Text style={detail}>{movieDetail.release_date}</Text>
-          </View>
-
-          <Spacer height={sh16}></Spacer>
+          <Spacer height={sh8}></Spacer>
 
           <Text style={detailTitle}>Overview:</Text>
           <Spacer height={sh4}></Spacer>
@@ -589,16 +588,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               <View style={ratingRow}>
                 {ratingRange.map((item, index) => {
                   return (
-                    // <TouchableOpacity
-                    //   style={{ borderRadius: sw16, backgroundColor: white, padding: sw2, margin: sw1 }}
-                    //   // disabled={ratingSubmitted}
-                    //   key={index}
-                    //   onPress={() => handleSetRating(item)}>
-                    //   <Image
-                    //     style={ratingStar}
-                    //     source={item <= rating ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
-                    //   />
-                    // </TouchableOpacity>
                     <View key={index} style={{ borderRadius: sw16, backgroundColor: white, padding: sw2, margin: sw1 }}>
                       <IconFA
                         size={sw24}

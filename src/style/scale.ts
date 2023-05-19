@@ -32,6 +32,7 @@ export const sh2 = verticalScale(2);
 export const sh4 = verticalScale(4);
 export const sh8 = verticalScale(8);
 export const sh12 = verticalScale(12);
+export const sh14 = verticalScale(14);
 export const sh16 = verticalScale(16);
 export const sh20 = verticalScale(20);
 export const sh24 = verticalScale(24);
