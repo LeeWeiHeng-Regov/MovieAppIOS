@@ -1,14 +1,15 @@
 import { SIZE_MATTERS_BASE_WIDTH } from "@env";
 import React, { FunctionComponent, useContext, useEffect, useState } from "react";
-import { Image, Keyboard, ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Keyboard, ScrollView, StatusBar, Text, TextInput, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { scale } from "react-native-size-matters/extend";
+import IconII from "react-native-vector-icons/Ionicons";
 
 import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
 import { APIKey, getPopularMovie, getTopRatedMovie, getTrendingMovieListUrl, getUpcomingMovie, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, black, blueWhite, sh16, sh32, sh4, sh48, sw16, sw24, sw32, sw4, sw8, white, yellow } from "../style";
+import { backgroundBlack, black, blueWhite, green, sh16, sh32, sh4, sh48, sw16, sw24, sw3, sw32, sw4, sw430, sw8, white } from "../style";
 import { alignCenter, br, justifyCenter } from "../style/style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
@@ -54,7 +55,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   const movieFilter: ViewStyle = {
     ...alignCenter,
     ...justifyCenter,
-    backgroundColor: yellow,
+    backgroundColor: green,
     padding: sw4,
     borderRadius: br,
     marginRight: sw16,
@@ -101,9 +102,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
           value={searchPhrase}
           style={{ fontSize: sh16, width: scale(SIZE_MATTERS_BASE_WIDTH - 88) }}></TextInput>
         {searchPhrase !== "" && (
-          <TouchableOpacity style={{ marginLeft: sw8 }} onPress={() => setSearchPhrase("")}>
-            <Image style={{ height: sw24, width: sw24 }} resizeMode={"stretch"} source={require("./Home/remove.png")}></Image>
-          </TouchableOpacity>
+          <IconII name="close-circle" style={{ marginLeft: sw8, fontSize: sw24 }} onPress={() => setSearchPhrase("")} />
         )}
       </View>
 
@@ -143,27 +142,6 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
                       break;
                   }
                   handleSetSelectedFilterType(item);
-
-                  // if (item === "Crayon") {
-                  //   const response = await (
-                  //     await fetch(
-                  //       `https://api.themoviedb.org/3/search/movie?api_key=724b5b81a31d70bfaef4c50cd34b6d8b&language=en-US&query=crayon%20Shin-chan`,
-                  //     )
-                  //   ).json();
-                  //   handleSetData(response);
-                  // } else if (item === "Trending") {
-                  //   handleFetchTrendingMovieList();
-                  // } else if (item === "Popular") {
-                  //   const response: IMovieList = await (await fetch(getPopularMovie)).json();
-                  //   handleSetData(response);
-                  // } else if (item === "Top Rated") {
-                  //   const response: IMovieList = await (await fetch(getTopRatedMovie)).json();
-                  //   handleSetData(response);
-                  // } else if (item === "Upcoming") {
-                  //   const response: IMovieList = await (await fetch(getUpcomingMovie)).json();
-                  //   handleSetData(response);
-                  // }
-                  // handleSetSelectedFilterType(item);
                 } catch (e) {
                   console.log(e);
                 }
@@ -196,8 +174,8 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
             flexDirection: "row",
             flexWrap: "wrap",
             height: "100%",
-            width: "100%",
-            paddingHorizontal: sw4,
+            width: sw430,
+            paddingHorizontal: sw3,
           }}>
           {data !== undefined ? (
             data.results.map((movie, index) => {

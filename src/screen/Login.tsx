@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { FunctionComponent, useContext, useEffect, useRef, useState } from "react";
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Alert, Linking, ScrollView, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TouchID from "react-native-touch-id";
 
-import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, Url } from "../config";
+import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, signUpURL, Url } from "../config";
 import { Context } from "../context/Context";
 import { backgroundBlack, blue, green, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
 import { alignCenter, br, bw, justifyCenter } from "../style/style";
@@ -201,7 +201,12 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
         <View style={{ ...alignCenter }}>
           <Text>
             Do not have an account yet?{" "}
-            <Text onPress={() => {}} style={{ textDecorationLine: "underline" }}>
+            <Text
+              onPress={async () => {
+                const Supported = await Linking.canOpenURL(signUpURL);
+                Supported ? await Linking.openURL(signUpURL) : Alert.alert("Error", `cannot open this link: ${signUpURL}`);
+              }}
+              style={{ textDecorationLine: "underline" }}>
               sign up
             </Text>{" "}
             now!

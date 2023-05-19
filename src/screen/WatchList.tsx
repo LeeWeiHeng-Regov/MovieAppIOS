@@ -3,11 +3,10 @@ import React, { Fragment, FunctionComponent, useContext, useEffect, useState } f
 import { ScrollView, StatusBar, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { NavigationBar } from "../component";
-import { MovieCard } from "../component/MovieCard";
+import { MovieCard, NavigationBar } from "../component";
 import { getWatchList } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, sw4 } from "../style";
+import { backgroundBlack, sw3 } from "../style";
 
 export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: WatchListProp): JSX.Element => {
   const [watchList, setWatchList] = useState<IMovie[] | undefined>(undefined);
@@ -36,7 +35,7 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
       <StatusBar barStyle={"light-content"} />
 
       <ScrollView>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", marginHorizontal: sw4 }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", paddingHorizontal: sw3 }}>
           {watchList !== undefined ? (
             watchList.map((item, index) => {
               const handleMovieSelected = (): void => {

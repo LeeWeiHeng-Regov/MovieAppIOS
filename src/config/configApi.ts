@@ -24,3 +24,4 @@ export const getImageUrl = `https://image.tmdb.org/t/p/original`;
 export const getPopularMovie = `${Url}/movie/popular?api_key=${APIKey}`;
 export const getTopRatedMovie = `${Url}/movie/top_rated?api_key=${APIKey}`;
 export const getUpcomingMovie = `${Url}/movie/upcoming?api_key=${APIKey}`;
+export const signUpURL = "https://www.themoviedb.org/signup";

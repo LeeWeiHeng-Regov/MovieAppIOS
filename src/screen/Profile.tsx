@@ -2,19 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import React, { FunctionComponent, useContext, useEffect, useState } from "react";
-import {
-  Image,
-  ImageSourcePropType,
-  ImageStyle,
-  StatusBar,
-  Text,
-  TextInput,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native";
+import { ImageStyle, StatusBar, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import IconFA from "react-native-vector-icons/FontAwesome";
+import IconF from "react-native-vector-icons/Fontisto";
+import IconII from "react-native-vector-icons/Ionicons";
 
 import { NavigationBar } from "../component";
 import { Context } from "../context/Context";
@@ -22,6 +14,7 @@ import {
   backgroundBlack,
   black,
   blue,
+  green,
   red,
   sh16,
   sh24,
@@ -29,7 +22,6 @@ import {
   sh40,
   sh8,
   sw1,
-  sw128,
   sw24,
   sw256,
   sw32,
@@ -37,7 +29,6 @@ import {
   sw4,
   sw8,
   white,
-  yellow,
 } from "../style";
 import { alignCenter, br, bw, justifyCenter } from "../style/style";
 
@@ -84,7 +75,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   const textBox: ViewStyle = {
     alignItems: "center",
     backgroundColor: backgroundBlack,
-    borderColor: yellow,
+    borderColor: green,
     borderRadius: br,
     borderWidth: bw,
     flexDirection: "row",
@@ -152,29 +143,29 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   }, []);
 
   interface IDropDownItemProps {
-    image: ImageSourcePropType;
+    icon: string;
     index?: number;
     title: string;
     onPressFunction?: () => void;
   }
   const dropdownMenuData: IDropDownItemProps[] = [
     {
-      image: require("./Profile/edit.png"),
+      icon: "edit",
       title: "Edit",
       onPressFunction: handleSetEditing,
     },
     {
-      image: require("./Profile/logout.png"),
+      icon: "sign-out",
       title: "Logout",
       onPressFunction: handleLogout,
     },
   ];
 
-  const dropdownItem = ({ index, image, title, onPressFunction }: IDropDownItemProps): JSX.Element => {
+  const dropdownItem = ({ index, icon, title, onPressFunction }: IDropDownItemProps): JSX.Element => {
     return (
       <TouchableOpacity style={{ padding: sw8, borderWidth: 0, marginVertical: sh4 }} key={index} onPress={onPressFunction}>
         <View style={{ flexDirection: "row", ...alignCenter }}>
-          <Image source={image} resizeMode={"stretch"} style={dropDownMenuIconStyle} />
+          <IconFA name={icon} size={24} />
           <Text style={{ textAlign: "center", fontSize: sh24 }}>{` ${title} `}</Text>
         </View>
       </TouchableOpacity>
@@ -182,7 +173,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   };
 
   const dropdownMenuStyle: ViewStyle = {
-    backgroundColor: yellow,
+    backgroundColor: green,
     borderWidth: sw1,
     marginTop: sh8,
     borderRadius: br,
@@ -205,7 +196,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
         {!editing && (
           <View style={{ alignItems: "flex-end", position: "absolute", alignSelf: "flex-end", right: 0 }}>
             <TouchableOpacity onPress={() => setSettingClicked(!settingClicked)}>
-              <Image source={require("./Profile/setting.png")} resizeMode={"stretch"} style={{ ...iconStyle, tintColor: yellow }} />
+              <IconII name={settingClicked ? "settings" : "settings-outline"} style={{ color: green, fontSize: sw32 }} />
             </TouchableOpacity>
             <View>{settingClicked && dropdownMenu()}</View>
           </View>
@@ -213,8 +204,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
       </View>
 
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-        <Image source={require("./Profile/user.png")} style={{ height: sw128, width: sw128, marginBottom: sh16, tintColor: yellow }} />
-
+        <IconII name="person-circle-outline" size={160} color={green} />
         <View style={textBox}>
           <Text style={text}>Username: {user.username}</Text>
         </View>
@@ -224,11 +214,12 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
             <View style={{ flexDirection: "row" }}>
               {genderOption.map((item, index) => {
                 return (
-                  <TouchableOpacity key={index} style={{ flexDirection: "row" }} onPress={() => setSelectedOption(index)}>
-                    <Image
-                      style={iconStyle}
-                      source={index === selectedOption ? require("./Profile/select.png") : require("./Profile/unselect.png")}
-                    />
+                  <TouchableOpacity
+                    disabled={index === selectedOption}
+                    key={index}
+                    style={{ flexDirection: "row", ...alignCenter }}
+                    onPress={() => setSelectedOption(index)}>
+                    <IconF name={index === selectedOption ? "radio-btn-active" : "radio-btn-passive"} size={sh24} />
                     <Text style={text}>{` ${item} `}</Text>
                   </TouchableOpacity>
                 );

@@ -1,8 +1,10 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { Fragment, FunctionComponent } from "react";
-import { Image, ImageStyle, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { ImageStyle, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import IconFA from "react-native-vector-icons/FontAwesome";
+import IconII from "react-native-vector-icons/Ionicons";
 
-import { black, sh12, sh16, sh32, sh4, sw32, yellow } from "../style";
+import { black, green, sh12, sh16, sh32, sh4, sw32 } from "../style";
 
 type TPageName = "Home" | "WatchList" | "Profile";
 
@@ -19,7 +21,7 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
   const navigationBar: ViewStyle = {
     width: "100%",
     bottom: 0,
-    backgroundColor: yellow,
+    backgroundColor: green,
   };
 
   const iconBar: ViewStyle = {
@@ -54,24 +56,23 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
           style={navigatorButton}
           disabled={onHomepage}
           onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Home" }] })}>
-          <Image source={onHomepage ? require("../asset/filledHome.png") : require("../asset/nonFilledHome.png")} style={icon} />
+          <IconII name={onHomepage ? "home" : "home-outline"} size={sw32} />
           <Text style={navigatorButtonText}> Home </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={navigatorButton}
           disabled={onWatchListPage}
           onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "WatchList" }] })}>
-          <Image
-            source={onWatchListPage ? require("../asset/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
-            style={icon}
-          />
+          <IconII name={onWatchListPage ? "bookmark" : "bookmark-outline"} size={sw32} />
           <Text style={navigatorButtonText}> Watch List </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={navigatorButton}
           disabled={onProfilePage}
           onPress={() => navigationFunction.reset({ index: 0, routes: [{ name: "Profile" }] })}>
-          <Image source={onProfilePage ? require("../asset/filledProfile.png") : require("../asset/nonFilledProfile.png")} style={icon} />
+          <IconFA name={onProfilePage ? "user" : "user-o"} size={sw32} />
           <Text style={navigatorButtonText}> Profile </Text>
         </TouchableOpacity>
       </View>
@@ -79,10 +80,7 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
         style={{
           height: sh32,
           backgroundColor: "transparent",
-          // position: "absolute",
-          // bottom: 0,
           width: "100%",
-          // zIndex: -1,
         }}
       />
     </View>

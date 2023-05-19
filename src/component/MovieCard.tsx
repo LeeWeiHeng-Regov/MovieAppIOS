@@ -4,9 +4,9 @@ import { GestureResponderEvent, TouchableOpacity, ViewStyle } from "react-native
 import FastImage from "react-native-fast-image";
 import { scale } from "react-native-size-matters/extend";
 
+import { Card } from ".";
 import { getImageUrl } from "../config";
 import { black, sh8, sw4 } from "../style";
-import { Card } from "./Card";
 
 interface IMovieCardProps {
   posterPath?: string | null;

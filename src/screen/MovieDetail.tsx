@@ -1,7 +1,6 @@
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
 import {
   Alert,
-  Dimensions,
   Image,
   ImageStyle,
   Modal,
@@ -9,14 +8,14 @@ import {
   StatusBar,
   Text,
   TextStyle,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import IconFA from "react-native-vector-icons/FontAwesome";
 
-import { Card } from "../component";
+import { Card, Spacer } from "../component";
 import {
   addToWatchList,
   APIKey,
@@ -34,13 +33,19 @@ import {
   blue,
   blueWhite,
   green,
+  red,
   sh16,
   sh20,
+  sh216,
   sh24,
+  sh240,
   sh256,
   sh32,
   sh4,
   sh48,
+  sh600,
+  sh648,
+  sh8,
   sw1,
   sw16,
   sw2,
@@ -48,6 +53,9 @@ import {
   sw32,
   sw344,
   sw368,
+  sw384,
+  sw4,
+  sw416,
   sw7,
   sw8,
   white,
@@ -64,16 +72,14 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const [previousRating, setPreviousRating] = useState<number>(0);
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
+  const [selectedReview, setSelectedReview] = useState<number | null>(null);
   const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [showRate, setShowRate] = useState<boolean>(false);
-  const [ref, setRef] = useState<ScrollView | null>(null);
+  const [ref, setRef] = useState<Text | null>(null);
+  const [lineCount, setLineCount] = useState<number[]>([]);
 
   const handleSetMovieReviewList = (newMovieReviewList: IMovieReview[]): void => {
     setMovieReviewList(newMovieReviewList);
-  };
-
-  const handleShowMore = (): void => {
-    setShowMore(!showMore);
   };
 
   const handleSetRating = (newRating: number): void => {
@@ -199,10 +205,14 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const movieTitle: TextStyle = {
     fontSize: sh32,
+    lineHeight: sh32,
     fontWeight: "bold",
     color: blue._1,
     flexWrap: "wrap",
     width: sw344,
+    textShadowColor: black,
+    textShadowOffset: { height: sw4, width: sw4 },
+    textShadowRadius: 1,
   };
 
   const itemStyle: ViewStyle = {
@@ -213,21 +223,13 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const detailTitle: TextStyle = {
     color: green,
-    fontSize: sh20,
-    fontWeight: "bold",
-    // backgroundColor: "blue",
-    lineHeight: sh20,
+    fontSize: sh16,
+    fontWeight: "500",
+    lineHeight: sh16,
   };
 
   const detail: TextStyle = {
-    color: yellow,
-    fontSize: sh16,
-    lineHeight: sh16,
-    // backgroundColor: "red",
-  };
-
-  const overviewDetail: TextStyle = {
-    color: yellow,
+    color: white,
     fontSize: sh16,
     lineHeight: sh16,
   };
@@ -237,9 +239,11 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     marginHorizontal: sw8,
     paddingVertical: sh4,
     // marginBottom: sh8,
-    backgroundColor: yellow,
+    backgroundColor: white,
+    shadowOpacity: 0.5,
     width: sw368,
-    height: sh256,
+    height: sh240,
+    borderRadius: br,
   };
 
   const reviewAuthor: TextStyle = {
@@ -281,15 +285,17 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   const iconStyle: ImageStyle = {
     height: sw24,
     width: sw24,
-    tintColor: yellow,
+    tintColor: black,
+    // backgroundColor: green,
+    // borderWidth: 2,
   };
 
   const handleStyle = (index: number, listLength: number): ViewStyle => {
     switch (index) {
       case 0:
-        return { ...movieReviewCard, marginLeft: 24 };
+        return { ...movieReviewCard, marginLeft: sw24 };
       case listLength - 1:
-        return { ...movieReviewCard, marginRight: 24 };
+        return { ...movieReviewCard, marginRight: sw24 };
       default:
         return movieReviewCard;
     }
@@ -304,24 +310,52 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
       } else {
         return (
           <ScrollView
-            ref={(ref) => setRef(ref)}
             bounces={false}
-            // pagingEnabled={true}
-            snapToInterval={384}
+            snapToInterval={sw384}
             decelerationRate={"fast"}
             disableIntervalMomentum={true}
             nestedScrollEnabled={true}
             horizontal={true}
-            style={{ borderRadius: br, width: "100%" }}
+            style={{ borderRadius: br, height: sh216 }}
             contentContainerStyle={{ flexDirection: "row", minWidth: "100%", backgroundColor: black }}>
-            {movieReviewList.map((review, index) => (
-              <Card key={index} style={handleStyle(index, movieReviewList.length)}>
-                <Fragment>
-                  <Text style={reviewAuthor}>By {review.author}: </Text>
-                  <Text style={reviewContent}>{review.content}</Text>
-                </Fragment>
-              </Card>
-            ))}
+            {movieReviewList.map((review, index) => {
+              return (
+                <Card key={index} style={handleStyle(index, movieReviewList.length)}>
+                  <View style={{ borderRadius: br }}>
+                    <Text style={reviewAuthor}>{review.author}:</Text>
+                    <Text
+                      numberOfLines={lineCount[index] === undefined ? 0 : lineCount[index]}
+                      onTextLayout={(e) => {
+                        e.nativeEvent.lines.length > 11 ? setLineCount(lineCount.concat(11)) : setLineCount(lineCount.concat(0));
+                      }}
+                      style={reviewContent}>
+                      {review.content}
+                    </Text>
+                    {lineCount[index] === 11 ? (
+                      <Text
+                        onPress={() => {
+                          setShowMore(true);
+                          setSelectedReview(index);
+                        }}
+                        style={{
+                          fontSize: sh16,
+                          color: blue._2,
+                          position: "absolute",
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: white,
+                          shadowColor: white,
+                          shadowOpacity: 1,
+                          shadowOffset: { height: 0, width: -sw16 },
+                          shadowRadius: 5,
+                        }}>
+                        more...
+                      </Text>
+                    ) : null}
+                  </View>
+                </Card>
+              );
+            })}
           </ScrollView>
         );
       }
@@ -380,41 +414,72 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
           style={{ backgroundColor: backgroundBlack, paddingHorizontal: sw7, width: "100%" }}>
-          <View style={{ zIndex: 1, margin: 8, position: "absolute", alignSelf: "flex-start" }}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <Image source={require("./MovieDetail/back.png")} resizeMode={"stretch"} style={iconStyle} />
-            </TouchableOpacity>
-          </View>
+          <IconFA
+            name="arrow-circle-o-left"
+            size={sw32}
+            color={white}
+            style={{
+              zIndex: 1,
+              margin: sw8,
+              position: "absolute",
+              alignSelf: "flex-start",
+              shadowOpacity: 1,
+              shadowOffset: { height: sw2, width: sw2 },
+              shadowColor: black,
+              shadowRadius: 0.5,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+
           <Image
             source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
-            style={{ height: (Dimensions.get("screen").width - 20) * 1.618, width: "100%", borderRadius: sw32 }} // 1.618 is golden ratio
+            style={{ height: sh648, width: sw416, borderRadius: sw32 }} // 1.618 is golden ratio
           ></Image>
+
+          <Spacer height={sh8} />
 
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={movieTitle}>{movieDetail.title}</Text>
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity style={functionButton} onPress={handleAddedWatchList}>
-                <Image
-                  source={addedWatchList ? require("./MovieDetail/filledBookmark.png") : require("../asset/nonFilledBookmark.png")}
-                  style={ratingStar}
+              <View style={functionButton}>
+                <IconFA
+                  size={sw24}
+                  name={addedWatchList ? "bookmark" : "bookmark-o"}
+                  // color={addedWatchList ? yellow : black}
+                  style={{
+                    shadowColor: black,
+                    shadowOffset: { height: sw1, width: sw1 },
+                    shadowOpacity: 1,
+                    shadowRadius: 1,
+                    color: addedWatchList ? red : black,
+                  }}
+                  onPress={handleAddedWatchList}
                 />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={functionButton}
-                onPress={() => {
-                  setShowRate(true);
-                }}>
-                <Image
-                  source={ratingSubmitted ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
-                  style={ratingStar}
+              </View>
+              <View style={functionButton}>
+                <IconFA
+                  size={sw24}
+                  name={ratingSubmitted ? "star" : "star-o"}
+                  // color={ratingSubmitted ? yellow : black}
+                  style={{
+                    shadowColor: black,
+                    shadowOffset: { height: sw1, width: sw1 },
+                    shadowOpacity: 1,
+                    shadowRadius: 1,
+                    color: ratingSubmitted ? yellow : black,
+                  }}
+                  onPress={() => {
+                    setShowRate(true);
+                  }}
                 />
-              </TouchableOpacity>
+              </View>
             </View>
           </View>
+
+          <Spacer height={sh4}></Spacer>
 
           <View style={itemStyle}>
             <Text style={detailTitle}>Language: </Text>
@@ -423,52 +488,71 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             <Text style={{ ...detail, marginRight: "auto" }}>{movieDetail.vote_average}</Text>
           </View>
 
+          <Spacer height={sh4}></Spacer>
+
           <View style={itemStyle}>
             <Text style={detailTitle}>Release Date: </Text>
             <Text style={detail}>{movieDetail.release_date}</Text>
           </View>
 
+          <Spacer height={sh4}></Spacer>
+
           <Text style={detailTitle}>Overview:</Text>
           <View style={itemStyle}>
-            <Text style={overviewDetail}>{movieDetail.overview}</Text>
+            <Text style={detail}>{movieDetail.overview}</Text>
           </View>
+
+          <Spacer height={sh4}></Spacer>
 
           <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : sh256 }}>
             <Text style={detailTitle}>Review: </Text>
             {handleDisplayReview(movieReviewList)}
           </View>
 
-          <Modal animationType="fade" transparent={true} visible={showMore}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setShowMore(false);
-              }}>
+          {selectedReview !== null && (
+            <Modal animationType="fade" transparent={true} visible={showMore}>
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  setShowMore(false);
+                }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    height: "100%",
+                    width: "100%",
+                    backgroundColor: "rgba(90,90,90,0.7)",
+                  }}></View>
+              </TouchableWithoutFeedback>
               <View
                 style={{
-                  position: "absolute",
-                  height: "100%",
-                  width: "100%",
-                }}></View>
-            </TouchableWithoutFeedback>
-            <View
-              style={{
-                ...alignCenter,
-                ...justifyCenter,
-                alignSelf: "center",
-                backgroundColor: backgroundBlack,
-                borderColor: blueWhite,
-                borderRadius: br,
-                borderWidth: bw,
-                height: "auto",
-                marginBottom: "auto",
-                marginTop: "auto",
-                padding: sw8,
-                width: "80%",
-              }}>
-              <Text style={detailTitle}>Overview: </Text>
-              <Text style={{ ...detail, fontSize: 16 }}>{movieDetail.overview}</Text>
-            </View>
-          </Modal>
+                  ...alignCenter,
+                  ...justifyCenter,
+                  alignSelf: "center",
+                  backgroundColor: green,
+                  borderColor: black,
+                  borderRadius: br,
+                  borderWidth: bw,
+                  height: "auto",
+                  marginBottom: "auto",
+                  marginTop: "auto",
+                  padding: sw8,
+                  width: "80%",
+                  shadowOffset: { height: sh16, width: sw16 },
+                  shadowColor: black,
+                  shadowOpacity: 1,
+                  shadowRadius: 2,
+                }}>
+                {movieReviewList !== undefined ? (
+                  <Fragment>
+                    <Text style={{ ...reviewAuthor, color: black }}>{movieReviewList[selectedReview].author}:</Text>
+                    <ScrollView style={{ height: sh600 }}>
+                      <Text style={{ ...reviewContent, color: black }}>{movieReviewList[selectedReview].content}</Text>
+                    </ScrollView>
+                  </Fragment>
+                ) : null}
+              </View>
+            </Modal>
+          )}
 
           <Modal animationType="fade" transparent={true} visible={showRate}>
             <TouchableWithoutFeedback
@@ -502,16 +586,32 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               <View style={ratingRow}>
                 {ratingRange.map((item, index) => {
                   return (
-                    <TouchableOpacity
-                      style={{ borderRadius: sw16, backgroundColor: white, padding: sw2, margin: sw1 }}
-                      // disabled={ratingSubmitted}
-                      key={index}
-                      onPress={() => handleSetRating(item)}>
-                      <Image
-                        style={ratingStar}
-                        source={item <= rating ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
+                    // <TouchableOpacity
+                    //   style={{ borderRadius: sw16, backgroundColor: white, padding: sw2, margin: sw1 }}
+                    //   // disabled={ratingSubmitted}
+                    //   key={index}
+                    //   onPress={() => handleSetRating(item)}>
+                    //   <Image
+                    //     style={ratingStar}
+                    //     source={item <= rating ? require("./MovieDetail/filledStar.png") : require("./MovieDetail/nonFilledStar.png")}
+                    //   />
+                    // </TouchableOpacity>
+                    <View key={index} style={{ borderRadius: sw16, backgroundColor: white, padding: sw2, margin: sw1 }}>
+                      <IconFA
+                        size={sw24}
+                        name={item <= rating ? "star" : "star-o"}
+                        style={{
+                          shadowColor: black,
+                          shadowOffset: { height: sw1, width: sw1 },
+                          shadowOpacity: 1,
+                          shadowRadius: 1,
+                          color: item <= rating ? yellow : black,
+                        }}
+                        onPress={() => {
+                          handleSetRating(item);
+                        }}
                       />
-                    </TouchableOpacity>
+                    </View>
                   );
                 })}
               </View>
