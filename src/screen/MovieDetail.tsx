@@ -39,7 +39,7 @@ import {
   sh216,
   sh24,
   sh240,
-  sh256,
+  sh260,
   sh32,
   sh4,
   sh48,
@@ -207,7 +207,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     fontSize: sh32,
     lineHeight: sh32,
     fontWeight: "bold",
-    color: blue._1,
+    color: white,
     flexWrap: "wrap",
     width: sw344,
     textShadowColor: black,
@@ -310,6 +310,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
       } else {
         return (
           <ScrollView
+            showsHorizontalScrollIndicator={false}
             bounces={false}
             snapToInterval={sw384}
             decelerationRate={"fast"}
@@ -317,7 +318,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             nestedScrollEnabled={true}
             horizontal={true}
             style={{ borderRadius: br, height: sh216 }}
-            contentContainerStyle={{ flexDirection: "row", minWidth: "100%", backgroundColor: black }}>
+            contentContainerStyle={{ flexDirection: "row", minWidth: "100%" }}>
             {movieReviewList.map((review, index) => {
               return (
                 <Card key={index} style={handleStyle(index, movieReviewList.length)}>
@@ -424,7 +425,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               position: "absolute",
               alignSelf: "flex-start",
               shadowOpacity: 1,
-              shadowOffset: { height: sw2, width: sw2 },
+              shadowOffset: { height: sw1, width: sw1 },
               shadowColor: black,
               shadowRadius: 0.5,
             }}
@@ -495,17 +496,19 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             <Text style={detail}>{movieDetail.release_date}</Text>
           </View>
 
-          <Spacer height={sh4}></Spacer>
+          <Spacer height={sh16}></Spacer>
 
           <Text style={detailTitle}>Overview:</Text>
+          <Spacer height={sh4}></Spacer>
           <View style={itemStyle}>
             <Text style={detail}>{movieDetail.overview}</Text>
           </View>
 
-          <Spacer height={sh4}></Spacer>
+          <Spacer height={sh16}></Spacer>
 
-          <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : sh256 }}>
+          <View style={{ height: movieReviewList === undefined || movieReviewList.length === 0 ? "auto" : sh260 }}>
             <Text style={detailTitle}>Review: </Text>
+            <Spacer height={sh4}></Spacer>
             {handleDisplayReview(movieReviewList)}
           </View>
 

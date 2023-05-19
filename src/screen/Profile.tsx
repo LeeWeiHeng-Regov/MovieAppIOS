@@ -9,6 +9,7 @@ import IconF from "react-native-vector-icons/Fontisto";
 import IconII from "react-native-vector-icons/Ionicons";
 
 import { NavigationBar } from "../component";
+import { FadeInView } from "../component/FadeInView";
 import { Context } from "../context/Context";
 import {
   backgroundBlack,
@@ -203,7 +204,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
         )}
       </View>
 
-      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+      <FadeInView style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <IconII name="person-circle-outline" size={160} color={green} />
         <View style={textBox}>
           <Text style={text}>Username: {user.username}</Text>
@@ -257,7 +258,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
             <Text style={{ color: white, textAlign: "center", fontSize: sh24 }}>save</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </FadeInView>
       <NavigationBar pageName={"Profile"} navigationFunction={navigation}></NavigationBar>
     </SafeAreaView>
   );

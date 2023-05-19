@@ -9,7 +9,7 @@ import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
 import { APIKey, getPopularMovie, getTopRatedMovie, getTrendingMovieListUrl, getUpcomingMovie, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, black, blueWhite, green, sh16, sh32, sh4, sh48, sw16, sw24, sw3, sw32, sw4, sw430, sw8, white } from "../style";
+import { backgroundBlack, black, blueWhite, green, sh16, sh32, sh4, sh48, sw16, sw24, sw3, sw32, sw4, sw8, white } from "../style";
 import { alignCenter, br, justifyCenter } from "../style/style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
@@ -90,7 +90,8 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   return (
     <SafeAreaView edges={["top"]} style={{ height: "100%", backgroundColor: backgroundBlack }}>
       <StatusBar barStyle={"light-content"} />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", ...searchBarStyle }}>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", ...searchBarStyle, alignSelf: "flex-start" }}>
         <TextInput
           onChangeText={(value) => {
             setSearchPhrase(value);
@@ -173,8 +174,6 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
-            height: "100%",
-            width: sw430,
             paddingHorizontal: sw3,
           }}>
           {data !== undefined ? (

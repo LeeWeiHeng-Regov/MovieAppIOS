@@ -1,9 +1,10 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { ScrollView, StatusBar, Text, View } from "react-native";
+import { ScrollView, StatusBar, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { MovieCard, NavigationBar } from "../component";
+import { FadeInView } from "../component/FadeInView";
 import { getWatchList } from "../config";
 import { Context } from "../context/Context";
 import { backgroundBlack, sw3 } from "../style";
@@ -35,7 +36,7 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
       <StatusBar barStyle={"light-content"} />
 
       <ScrollView>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", paddingHorizontal: sw3 }}>
+        <FadeInView style={{ flexDirection: "row", flexWrap: "wrap", width: "100%", paddingHorizontal: sw3 }}>
           {watchList !== undefined ? (
             watchList.map((item, index) => {
               const handleMovieSelected = (): void => {
@@ -47,7 +48,7 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
           ) : (
             <Text>Loading...</Text>
           )}
-        </View>
+        </FadeInView>
       </ScrollView>
       <NavigationBar pageName={"WatchList"} navigationFunction={navigation}></NavigationBar>
     </SafeAreaView>

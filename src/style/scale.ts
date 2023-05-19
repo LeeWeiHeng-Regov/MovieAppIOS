@@ -46,6 +46,7 @@ export const sh216 = verticalScale(216);
 export const sh224 = verticalScale(224);
 export const sh240 = verticalScale(240);
 export const sh256 = verticalScale(256);
+export const sh260 = verticalScale(260);
 export const sh512 = verticalScale(512);
 export const sh600 = verticalScale(600);
 export const sh648 = verticalScale(648);
