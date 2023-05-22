@@ -9,7 +9,7 @@ import { NavigationBar } from "../component";
 import { MovieCard } from "../component/MovieCard";
 import { APIKey, getPopularMovie, getTopRatedMovie, getTrendingMovieListUrl, getUpcomingMovie, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, black, blueWhite, green, sh16, sh32, sh4, sh48, sw16, sw24, sw3, sw32, sw4, sw8, white } from "../style";
+import { backgroundBlack, black, blue, blueWhite, sh16, sh32, sh4, sh48, sw16, sw24, sw3, sw32, sw4, sw8, white } from "../style";
 import { alignCenter, br, justifyCenter } from "../style/style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
@@ -55,7 +55,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   const movieFilter: ViewStyle = {
     ...alignCenter,
     ...justifyCenter,
-    backgroundColor: green,
+    backgroundColor: blue._3,
     padding: sw4,
     borderRadius: br,
     marginRight: sw16,

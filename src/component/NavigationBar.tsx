@@ -4,7 +4,7 @@ import { ImageStyle, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "
 import IconFA from "react-native-vector-icons/FontAwesome";
 import IconII from "react-native-vector-icons/Ionicons";
 
-import { black, green, sh12, sh16, sh32, sh4, sw32 } from "../style";
+import { black, blue, sh12, sh16, sh32, sh4, sw32 } from "../style";
 
 type TPageName = "Home" | "WatchList" | "Profile";
 
@@ -21,7 +21,7 @@ export const NavigationBar: FunctionComponent<INavigationBarProp> = ({ pageName,
   const navigationBar: ViewStyle = {
     width: "100%",
     bottom: 0,
-    backgroundColor: green,
+    backgroundColor: blue._3,
   };
 
   const iconBar: ViewStyle = {

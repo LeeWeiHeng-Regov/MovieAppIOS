@@ -33,11 +33,9 @@ import {
   black,
   blue,
   blueWhite,
-  green,
   red,
   sh14,
   sh16,
-  sh20,
   sh216,
   sh24,
   sh240,
@@ -203,7 +201,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     fontSize: sh32,
     lineHeight: sh32,
     fontWeight: "bold",
-    color: white,
+    color: blue._3,
     flexWrap: "wrap",
     width: sw344,
     textShadowColor: black,
@@ -218,9 +216,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const detailTitle: TextStyle = {
-    color: black,
+    color: blue._3,
     fontSize: sh16,
-    fontWeight: "500",
+    fontWeight: "bold",
     lineHeight: sh16,
   };
 
@@ -243,7 +241,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const reviewAuthor: TextStyle = {
     color: black,
-    fontSize: sh20,
+    fontSize: sh16,
     fontWeight: "bold",
   };
 
@@ -275,14 +273,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     width: sw32,
     ...alignCenter,
     ...justifyCenter,
-  };
-
-  const iconStyle: ImageStyle = {
-    height: sw24,
-    width: sw24,
-    tintColor: black,
-    // backgroundColor: green,
-    // borderWidth: 2,
   };
 
   const handleStyle = (index: number, listLength: number): ViewStyle => {
@@ -478,19 +468,19 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
           <Spacer height={sh4}></Spacer>
 
           <View style={{ ...itemStyle }}>
-            <IconF name="world-o" size={sh14} />
+            <IconF name="world-o" size={sh14} color={blue._3} style={{ fontWeight: "bold" }} />
             <Spacer width={sw4} />
             <Text style={{ ...detail }}>{movieDetail.original_language.toUpperCase()}</Text>
 
-            <Spacer width={sw8} />
+            <Spacer width={sw16} />
 
-            <IconF name="date" size={sh14} />
+            <IconF name="date" size={sh14} color={blue._3} />
             <Spacer width={sw4} />
             <Text style={{ ...detail }}>{movieDetail.release_date}</Text>
 
-            <Spacer width={sw8} />
+            <Spacer width={sw16} />
 
-            <IconFA name="star-o" size={sh16} />
+            <IconFA name="star-o" size={sh16} color={blue._3} />
             <Spacer width={sw4} />
             <Text style={{ ...detail }}>{movieDetail.vote_average}</Text>
           </View>
@@ -530,7 +520,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
                   ...alignCenter,
                   ...justifyCenter,
                   alignSelf: "center",
-                  backgroundColor: green,
+                  backgroundColor: blue._3,
                   borderColor: black,
                   borderRadius: br,
                   borderWidth: bw,

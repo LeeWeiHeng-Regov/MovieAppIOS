@@ -6,7 +6,7 @@ import TouchID from "react-native-touch-id";
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, signUpURL, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, blue, green, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
+import { backgroundBlack, blue, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
 import { alignCenter, br, bw, justifyCenter } from "../style/style";
 
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
@@ -161,7 +161,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       style={{
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: green,
+        backgroundColor: blue._3,
       }}>
       <ScrollView
         // onScroll={!editing ? }

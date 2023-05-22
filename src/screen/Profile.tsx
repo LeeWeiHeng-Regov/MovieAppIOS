@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import React, { FunctionComponent, useContext, useEffect, useState } from "react";
-import { ImageStyle, StatusBar, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StatusBar, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import IconFA from "react-native-vector-icons/FontAwesome";
 import IconF from "react-native-vector-icons/Fontisto";
@@ -11,26 +11,7 @@ import IconII from "react-native-vector-icons/Ionicons";
 import { NavigationBar } from "../component";
 import { FadeInView } from "../component/FadeInView";
 import { Context } from "../context/Context";
-import {
-  backgroundBlack,
-  black,
-  blue,
-  green,
-  red,
-  sh16,
-  sh24,
-  sh4,
-  sh40,
-  sh8,
-  sw1,
-  sw24,
-  sw256,
-  sw32,
-  sw328,
-  sw4,
-  sw8,
-  white,
-} from "../style";
+import { backgroundBlack, blue, red, sh16, sh24, sh4, sh40, sh8, sw1, sw256, sw32, sw328, sw4, sw8, white } from "../style";
 import { alignCenter, br, bw, justifyCenter } from "../style/style";
 
 export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileProp): JSX.Element => {
@@ -76,7 +57,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   const textBox: ViewStyle = {
     alignItems: "center",
     backgroundColor: backgroundBlack,
-    borderColor: green,
+    borderColor: blue._3,
     borderRadius: br,
     borderWidth: bw,
     flexDirection: "row",
@@ -90,18 +71,6 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
     color: white,
     fontSize: sh24,
     fontWeight: "bold",
-  };
-
-  const iconStyle: ImageStyle = {
-    height: sw32,
-    tintColor: black,
-    width: sw32,
-  };
-
-  const dropDownMenuIconStyle: ImageStyle = {
-    height: sw24,
-    tintColor: black,
-    width: sw24,
   };
 
   const handleSaveChange = async (): Promise<void> => {
@@ -174,7 +143,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   };
 
   const dropdownMenuStyle: ViewStyle = {
-    backgroundColor: green,
+    backgroundColor: blue._3,
     borderWidth: sw1,
     marginTop: sh8,
     borderRadius: br,
@@ -197,7 +166,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
         {!editing && (
           <View style={{ alignItems: "flex-end", position: "absolute", alignSelf: "flex-end", right: 0 }}>
             <TouchableOpacity onPress={() => setSettingClicked(!settingClicked)}>
-              <IconII name={settingClicked ? "settings" : "settings-outline"} style={{ color: green, fontSize: sw32 }} />
+              <IconII name={settingClicked ? "settings" : "settings-outline"} style={{ color: blue._3, fontSize: sw32 }} />
             </TouchableOpacity>
             <View>{settingClicked && dropdownMenu()}</View>
           </View>
@@ -205,7 +174,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
       </View>
 
       <FadeInView style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-        <IconII name="person-circle-outline" size={160} color={green} />
+        <IconII name="person-circle-outline" size={160} color={blue._3} />
         <View style={textBox}>
           <Text style={text}>Username: {user.username}</Text>
         </View>
