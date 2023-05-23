@@ -6,8 +6,7 @@ import TouchID from "react-native-touch-id";
 
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, signUpURL, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, blue, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
-import { alignCenter, br, bw, justifyCenter } from "../style/style";
+import { alignCenter, backgroundBlack, blue, br, bw, justifyCenter, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
 
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
   const [username, setUsername] = useState<string>("");
@@ -164,7 +163,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
         backgroundColor: blue._3,
       }}>
       <ScrollView
-        // onScroll={!editing ? }
         keyboardShouldPersistTaps={"handled"}
         scrollsToTop={true}
         scrollEnabled={true}
@@ -177,8 +175,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
           <View style={{ height: sh128 }} />
           <TextInput
             onChangeText={(value) => setUsername(value)}
-            // onFocus={() => setEditing(true)}
-            // onBlur={() => setEditing(false)}
             placeholder="Please enter your username*"
             placeholderTextColor={backgroundBlack}
             style={{ ...textBoxStyle, marginTop: "50%" }}
@@ -186,8 +182,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
           />
           <TextInput
             onChangeText={(value) => setPassword(value)}
-            // onFocus={() => setEditing(true)}
-            // onBlur={() => setEditing(false)}
             placeholder="Please enter your password*"
             placeholderTextColor={backgroundBlack}
             style={textBoxStyle}

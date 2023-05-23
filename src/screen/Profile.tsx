@@ -9,10 +9,28 @@ import IconF from "react-native-vector-icons/Fontisto";
 import IconII from "react-native-vector-icons/Ionicons";
 
 import { NavigationBar } from "../component";
-import { FadeInView } from "../component/FadeInView";
 import { Context } from "../context/Context";
-import { backgroundBlack, blue, red, sh16, sh24, sh4, sh40, sh8, sw1, sw256, sw32, sw328, sw4, sw8, white } from "../style";
-import { alignCenter, br, bw, justifyCenter } from "../style/style";
+import {
+  alignCenter,
+  backgroundBlack,
+  blue,
+  br,
+  bw,
+  justifyCenter,
+  red,
+  sh16,
+  sh24,
+  sh4,
+  sh40,
+  sh8,
+  sw1,
+  sw256,
+  sw32,
+  sw328,
+  sw4,
+  sw8,
+  white,
+} from "../style";
 
 export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileProp): JSX.Element => {
   const { user } = useContext<IContextInput>(Context);
@@ -173,7 +191,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
         )}
       </View>
 
-      <FadeInView style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <IconII name="person-circle-outline" size={160} color={blue._3} />
         <View style={textBox}>
           <Text style={text}>Username: {user.username}</Text>
@@ -227,7 +245,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
             <Text style={{ color: white, textAlign: "center", fontSize: sh24 }}>save</Text>
           </TouchableOpacity>
         )}
-      </FadeInView>
+      </View>
       <NavigationBar pageName={"Profile"} navigationFunction={navigation}></NavigationBar>
     </SafeAreaView>
   );

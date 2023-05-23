@@ -5,12 +5,29 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { scale } from "react-native-size-matters/extend";
 import IconII from "react-native-vector-icons/Ionicons";
 
-import { NavigationBar } from "../component";
-import { MovieCard } from "../component/MovieCard";
+import { FadeInView, Loader, MovieCard, NavigationBar } from "../component";
 import { APIKey, getPopularMovie, getTopRatedMovie, getTrendingMovieListUrl, getUpcomingMovie, Url } from "../config";
 import { Context } from "../context/Context";
-import { backgroundBlack, black, blue, blueWhite, sh16, sh32, sh4, sh48, sw16, sw24, sw3, sw32, sw4, sw8, white } from "../style";
-import { alignCenter, br, justifyCenter } from "../style/style";
+import {
+  alignCenter,
+  backgroundBlack,
+  black,
+  blue,
+  blueWhite,
+  br,
+  justifyCenter,
+  sh16,
+  sh32,
+  sh4,
+  sh48,
+  sw16,
+  sw24,
+  sw3,
+  sw32,
+  sw4,
+  sw8,
+  white,
+} from "../style";
 
 export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX.Element => {
   const [searchPhrase, setSearchPhrase] = useState<string>("");
@@ -71,7 +88,9 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   };
 
   useEffect((): void => {
-    handleFetchTrendingMovieList();
+    setTimeout(() => {
+      handleFetchTrendingMovieList();
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -169,8 +188,8 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
         </ScrollView>
       </View>
 
-      <ScrollView indicatorStyle="white" style={{ width: "100%" }}>
-        <View
+      <ScrollView indicatorStyle="white">
+        <FadeInView
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
@@ -187,9 +206,10 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
               ) : null;
             })
           ) : (
-            <Text>Loading...</Text>
+            <Loader />
+            // <Text>Loading....</Text>
           )}
-        </View>
+        </FadeInView>
       </ScrollView>
       {showNavigationBar && <NavigationBar pageName={"Home"} navigationFunction={navigation}></NavigationBar>}
     </SafeAreaView>

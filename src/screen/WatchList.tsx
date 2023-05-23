@@ -1,10 +1,9 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { Fragment, FunctionComponent, useContext, useEffect, useState } from "react";
-import { ScrollView, StatusBar, Text } from "react-native";
+import React, { FunctionComponent, useContext, useEffect, useState } from "react";
+import { ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { MovieCard, NavigationBar } from "../component";
-import { FadeInView } from "../component/FadeInView";
+import { FadeInView, Loader, MovieCard, NavigationBar } from "../component";
 import { getWatchList } from "../config";
 import { Context } from "../context/Context";
 import { backgroundBlack, sw3 } from "../style";
@@ -46,7 +45,7 @@ export const WatchList: FunctionComponent<WatchListProp> = ({ navigation }: Watc
               return <MovieCard key={index} posterPath={item.poster_path} navigationFunction={handleMovieSelected} />;
             })
           ) : (
-            <Text>Loading...</Text>
+            <Loader />
           )}
         </FadeInView>
       </ScrollView>

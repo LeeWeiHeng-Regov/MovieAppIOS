@@ -12,7 +12,7 @@ export const FadeInView: React.FC<FadeInViewProps> = (props) => {
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 500,
+      duration: 1500,
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);

@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import IconFA from "react-native-vector-icons/FontAwesome";
 import IconF from "react-native-vector-icons/Fontisto";
 
-import { Card, Spacer } from "../component";
+import { Card, Loader, Spacer } from "../component";
 import {
   addToWatchList,
   APIKey,
@@ -29,10 +29,14 @@ import {
 } from "../config";
 import { Context } from "../context/Context";
 import {
+  alignCenter,
   backgroundBlack,
   black,
   blue,
   blueWhite,
+  br,
+  bw,
+  justifyCenter,
   red,
   sh14,
   sh16,
@@ -61,7 +65,6 @@ import {
   white,
   yellow,
 } from "../style";
-import { alignCenter, br, bw, justifyCenter } from "../style/style";
 
 export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: MovieDetailProp): JSX.Element => {
   const { selectedMovieID, sessionID } = useContext<IContextInput>(Context);
@@ -288,7 +291,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
 
   const handleDisplayReview = (movieReviewList: IMovieReview[] | undefined) => {
     if (movieReviewList === undefined) {
-      return <Text style={{ color: white }}>Loading...</Text>;
+      return <Loader />;
     } else if (movieReviewList !== undefined) {
       if (movieReviewList.length === 0) {
         return <Text style={{ color: white }}>No Review for this movie yet</Text>;
@@ -468,7 +471,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
           <Spacer height={sh4}></Spacer>
 
           <View style={{ ...itemStyle }}>
-            <IconF name="world-o" size={sh14} color={blue._3} style={{ fontWeight: "bold" }} />
+            <IconF name="world-o" size={sh14} color={blue._3} />
             <Spacer width={sw4} />
             <Text style={{ ...detail }}>{movieDetail.original_language.toUpperCase()}</Text>
 
@@ -601,7 +604,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
           </Modal>
         </ScrollView>
       ) : (
-        <Text>Loading...</Text>
+        <Loader />
       )}
     </SafeAreaView>
   );

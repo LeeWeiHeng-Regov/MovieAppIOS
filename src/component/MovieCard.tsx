@@ -25,19 +25,17 @@ export const MovieCard = ({ posterPath, style: inputStyle, navigationFunction }:
 
   return (
     <Card style={{ ...movieCard, ...inputStyle }}>
-      <Fragment>
-        <TouchableOpacity onPress={navigationFunction}>
-          <FastImage
-            source={posterPath !== null ? { uri: `${getImageUrl}${posterPath}` } : require("../asset/imageNotFound.svg")}
-            style={{
-              height: "100%",
-              width: "100%",
-              borderRadius: 8,
-            }}
-            resizeMode="stretch"
-          />
-        </TouchableOpacity>
-      </Fragment>
+      <TouchableOpacity onPress={navigationFunction}>
+        <FastImage
+          source={posterPath !== null ? { uri: `${getImageUrl}${posterPath}` } : require("../asset/imageNotFound.svg")}
+          style={{
+            height: "100%",
+            width: "100%",
+            borderRadius: 8,
+          }}
+          resizeMode="stretch"
+        />
+      </TouchableOpacity>
     </Card>
   );
 };
