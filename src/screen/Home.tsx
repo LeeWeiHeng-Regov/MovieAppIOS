@@ -34,7 +34,6 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
   const [data, setData] = useState<IMovieList | undefined>(undefined);
   const { changeSelectedMovieID } = useContext<IContextInput>(Context);
   const [selectedFilterType, setSelectedFilterType] = useState<filterType>("Trending");
-  const [typing, setTyping] = useState<boolean>(true);
   const [showNavigationBar, setShowNavigationBar] = useState<boolean>(true);
 
   type filterType = "Trending" | "Popular" | "Upcoming" | "Top Rated" | "Crayon";
@@ -115,8 +114,6 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
           onChangeText={(value) => {
             setSearchPhrase(value);
           }}
-          onFocus={() => setTyping(false)}
-          onBlur={() => setTyping(true)}
           placeholder="Search..."
           placeholderTextColor={white}
           value={searchPhrase}
