@@ -68,18 +68,20 @@ import {
 
 export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: MovieDetailProp): JSX.Element => {
   const { selectedMovieID, sessionID } = useContext<IContextInput>(Context);
+  const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [addedWatchList, setAddedWatchList] = useState<boolean>(false);
+  const [lineCount, setLineCount] = useState<number[]>([]);
   const [movieDetail, setMovieDetail] = useState<IMovieDetail | undefined>(undefined);
   const [movieReviewList, setMovieReviewList] = useState<IMovieReview[] | undefined>(undefined);
-  const [addedWatchList, setAddedWatchList] = useState<boolean>(false);
-  const [rating, setRating] = useState<number>(0);
   const [previousRating, setPreviousRating] = useState<number>(0);
+  const [rating, setRating] = useState<number>(0);
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
-  const [showMore, setShowMore] = useState<boolean>(false);
   const [selectedReview, setSelectedReview] = useState<number | null>(null);
-  const ratingRange: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [showMore, setShowMore] = useState<boolean>(false);
   const [showRate, setShowRate] = useState<boolean>(false);
-  const [ref, setRef] = useState<Text | null>(null);
-  const [lineCount, setLineCount] = useState<number[]>([]);
+  const [loadingMovieDetail, setLoadingMovieDetail] = useState<boolean>(true);
+  const [loadingMovieReviewList, setLoadingMovieReviewList] = useState<boolean>(true);
+  const [loadingMovieStates, setLoadingMovieStates] = useState<boolean>(true);
 
   const handleSetMovieReviewList = (newMovieReviewList: IMovieReview[]): void => {
     setMovieReviewList(newMovieReviewList);
@@ -290,9 +292,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   };
 
   const handleDisplayReview = (movieReviewList: IMovieReview[] | undefined) => {
-    if (movieReviewList === undefined) {
-      return <Loader />;
-    } else if (movieReviewList !== undefined) {
+    if (movieReviewList !== undefined) {
       if (movieReviewList.length === 0) {
         return <Text style={{ color: white }}>No Review for this movie yet</Text>;
       } else {
@@ -348,6 +348,8 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
           </ScrollView>
         );
       }
+    } else {
+      !loadingMovieReviewList ? Alert.alert("Error!", "Error loading review, please contact the customer service!") : null;
     }
   };
 
@@ -355,6 +357,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
     try {
       const jsonResponse: IMovieDetail = await (await fetch(`${Url}${getMovieDetailUrl}${selectedMovieID}?api_key=${APIKey}`)).json();
       handleSetMovieDetail(jsonResponse);
+      setLoadingMovieDetail(false);
     } catch (err) {
       console.log("err", err);
     }
@@ -372,6 +375,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
         setPreviousRating(jsonResponse.rated.value);
         setRatingSubmitted(true);
       }
+      setLoadingMovieStates(false);
     } catch (err) {
       console.log("err", err);
     }
@@ -383,6 +387,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
         await fetch(`${Url}${getMovieReviewUrl(selectedMovieID)}?api_key=${APIKey}&session_id=${sessionID}`)
       ).json();
       handleSetMovieReviewList(jsonResponse.results);
+      setLoadingMovieReviewList(false);
     } catch (err) {
       console.log("err", err);
     }
@@ -395,8 +400,9 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
   }, []);
 
   return (
-    <SafeAreaView edges={["top", "bottom"]} style={{ backgroundColor: backgroundBlack, ...alignCenter, ...justifyCenter }}>
+    <SafeAreaView edges={["top", "bottom"]} style={{ backgroundColor: backgroundBlack, ...alignCenter, ...justifyCenter, height: "100%" }}>
       <StatusBar barStyle={"light-content"} />
+      {(loadingMovieDetail || loadingMovieReviewList || loadingMovieStates) && <Loader />}
       {movieDetail !== undefined ? (
         <ScrollView
           bounces={false}
@@ -426,7 +432,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             source={{ uri: `${getImageUrl}${movieDetail.poster_path}` }}
             resizeMode="stretch"
             style={{ height: sh648, width: sw416, borderRadius: sw32 }} // 1.618 is golden ratio
-          ></Image>
+          />
 
           <Spacer height={sh8} />
 
@@ -521,13 +527,12 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
               <View
                 style={{
                   ...alignCenter,
-                  ...justifyCenter,
                   alignSelf: "center",
                   backgroundColor: blue._3,
                   borderColor: black,
                   borderRadius: br,
                   borderWidth: bw,
-                  height: "auto",
+                  height: "70%",
                   marginBottom: "auto",
                   marginTop: "auto",
                   padding: sw8,
@@ -565,7 +570,6 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             <View
               style={{
                 ...alignCenter,
-                ...justifyCenter,
                 alignSelf: "center",
                 backgroundColor: backgroundBlack,
                 borderColor: blueWhite,
@@ -603,9 +607,7 @@ export const MovieDetail: FunctionComponent<MovieDetailProp> = ({ navigation }: 
             </View>
           </Modal>
         </ScrollView>
-      ) : (
-        <Loader />
-      )}
+      ) : null}
     </SafeAreaView>
   );
 };

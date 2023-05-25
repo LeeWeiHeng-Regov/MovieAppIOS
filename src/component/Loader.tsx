@@ -7,7 +7,7 @@ export const Loader = () => {
   return (
     <Modal transparent={true}>
       <View style={{ flex: 1, ...justifyCenter }}>
-        <ActivityIndicator size={"large"} hidesWhenStopped={true} color={white} />
+        <ActivityIndicator size={"large"} color={white} />
       </View>
     </Modal>
   );
