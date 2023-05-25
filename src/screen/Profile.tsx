@@ -51,6 +51,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   };
 
   const handleLogout = (): void => {
+    AsyncStorage.clear();
     navigation.reset({
       index: 0,
       routes: [{ name: "Login" }],
@@ -182,7 +183,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
       <StatusBar barStyle={"light-content"} />
       <View style={{ zIndex: 1, marginRight: sw8 }}>
         {!editing && (
-          <View style={{ alignItems: "flex-end", position: "absolute", alignSelf: "flex-end", right: 0 }}>
+          <View style={{ alignItems: "flex-end", position: "absolute", right: 0 }}>
             <TouchableOpacity onPress={() => setSettingClicked(!settingClicked)}>
               <IconII name={settingClicked ? "settings" : "settings-outline"} style={{ color: blue._3, fontSize: sw32 }} />
             </TouchableOpacity>
