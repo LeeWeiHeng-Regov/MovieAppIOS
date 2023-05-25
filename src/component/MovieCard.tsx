@@ -6,7 +6,7 @@ import { scale } from "react-native-size-matters/extend";
 
 import { Card } from ".";
 import { getImageUrl } from "../config";
-import { black, sh8, sw4 } from "../style";
+import { alignCenter, black, justifyCenter, sh8, sw4 } from "../style";
 
 interface IMovieCardProps {
   posterPath?: string | null;
@@ -14,7 +14,7 @@ interface IMovieCardProps {
   navigationFunction?: (event: GestureResponderEvent) => void;
 }
 
-export const MovieCard = ({ posterPath, style: inputStyle, navigationFunction }: IMovieCardProps): JSX.Element => {
+export const MovieCard = ({ posterPath = null, style: inputStyle, navigationFunction }: IMovieCardProps): JSX.Element => {
   const movieCard: ViewStyle = {
     height: (scale(SIZE_MATTERS_BASE_WIDTH - 24) * 1.618) / 2,
     width: scale(SIZE_MATTERS_BASE_WIDTH - 24) / 2,
@@ -25,12 +25,12 @@ export const MovieCard = ({ posterPath, style: inputStyle, navigationFunction }:
 
   return (
     <Card style={{ ...movieCard, ...inputStyle }}>
-      <TouchableOpacity onPress={navigationFunction}>
+      <TouchableOpacity onPress={navigationFunction} style={{ flex: 1, ...justifyCenter, ...alignCenter }}>
         <FastImage
-          source={posterPath !== null ? { uri: `${getImageUrl}${posterPath}` } : require("../asset/imageNotFound.svg")}
+          source={posterPath !== null ? { uri: `${getImageUrl}${posterPath}` } : require("../asset/imageNotFound.png")}
           style={{
-            height: "100%",
-            width: "100%",
+            height: posterPath !== null ? "100%" : "30%",
+            width: posterPath !== null ? "100%" : "40%",
             borderRadius: 8,
           }}
           resizeMode="stretch"
