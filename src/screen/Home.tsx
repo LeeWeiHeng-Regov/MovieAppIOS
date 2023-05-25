@@ -104,7 +104,7 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
       KeyboardWillShow.remove();
       KeyboardWillHide.remove();
     };
-  }, [typing]);
+  }, []);
 
   return (
     <SafeAreaView edges={["top"]} style={{ height: "100%", backgroundColor: backgroundBlack }}>
@@ -207,7 +207,6 @@ export const Home: FunctionComponent<HomeProp> = ({ navigation }: HomeProp): JSX
             })
           ) : (
             <Loader />
-            // <Text>Loading....</Text>
           )}
         </FadeInView>
       </ScrollView>

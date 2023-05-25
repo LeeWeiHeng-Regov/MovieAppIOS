@@ -168,7 +168,6 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
         scrollEnabled={true}
         bounces={false}
         style={{ width: "100%", height: "100%" }}
-        contentContainerStyle={{}}
         showsVerticalScrollIndicator={false}>
         <View style={{ alignItems: "center", borderColor: "blue" }}>
           <Text style={{ fontSize: 30, marginTop: 160, fontWeight: "bold" }}>Login</Text>
