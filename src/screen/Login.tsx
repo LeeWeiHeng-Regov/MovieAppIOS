@@ -1,17 +1,23 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 import React, { FunctionComponent, useContext, useEffect, useRef, useState } from "react";
 import { Alert, Linking, ScrollView, Text, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TouchID from "react-native-touch-id";
+import IconFA from "react-native-vector-icons/FontAwesome";
+import { Camera } from "react-native-vision-camera";
 
+import { Loader, Spacer } from "../component";
 import { APIKey, authenticateRequestTokenUrl, createRequestTokenUrl, createSessionIDUrl, signUpURL, Url } from "../config";
 import { Context } from "../context/Context";
 import { alignCenter, backgroundBlack, blue, br, bw, justifyCenter, sh128, sh40, sh8, sw256, sw8, sw80, white } from "../style";
+import { OCR } from "./HomeComponent";
 
 export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): JSX.Element => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  // const [editing, setEditing] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showCam, setShowCam] = useState<boolean>(false);
 
   const { saveUser, handleSetSessionID } = useContext<IContextInput>(Context);
 
@@ -55,7 +61,7 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       }
     }
   };
-
+  ``;
   const handleCreateSessionID = async (username: string, password: string): Promise<boolean | undefined> => {
     try {
       const createRequestToken: IRequestTokenResponse = await (await fetch(`${Url}${createRequestTokenUrl}?api_key=${APIKey}`)).json();
@@ -130,10 +136,12 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
       );
       if (allowEasyLogin) {
         TouchID.authenticate("Login using FaceID", { passcodeFallback: true })
-          .then(async (success: boolean) => {
+          .then(async () => {
+            setLoading(true);
             const createdSessionID: boolean | undefined = await handleCreateSessionID(storageUsername, storagePassword);
 
             if (createdSessionID) {
+              setLoading(false);
               saveUser({ username: storageUsername, password: storagePassword });
               navigation.reset({
                 index: 0,
@@ -162,16 +170,36 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
         alignItems: "center",
         backgroundColor: blue._3,
       }}>
+      {showCam && <OCR closeCam={() => setShowCam(false)} />}
+      {loading && <Loader />}
       <ScrollView
         keyboardShouldPersistTaps={"handled"}
-        scrollsToTop={true}
+        scrollsToTop={false}
         scrollEnabled={true}
         bounces={false}
         style={{ width: "100%", height: "100%" }}
         showsVerticalScrollIndicator={false}>
         <View style={{ alignItems: "center", borderColor: "blue" }}>
           <Text style={{ fontSize: 30, marginTop: 160, fontWeight: "bold" }}>Login</Text>
-          <View style={{ height: sh128 }} />
+          <Spacer height={sh128} />
+
+          <TouchableOpacity
+            onPress={async () => {
+              const cameraPermission = await Camera.getCameraPermissionStatus();
+              const deviceList = await Camera.getAvailableCameraDevices();
+              // console.log(deviceList);
+              if (cameraPermission === "not-determined") {
+                const newCameraPermission = await Camera.requestCameraPermission();
+                console.log("new", newCameraPermission);
+                setShowCam(true);
+              } else if (cameraPermission === "authorized") {
+                console.log(cameraPermission);
+                setShowCam(true);
+              }
+            }}>
+            <IconFA name="camera" size={sh40} />
+          </TouchableOpacity>
+
           <TextInput
             onChangeText={(value) => setUsername(value)}
             placeholder="Please enter your username*"
@@ -190,20 +218,20 @@ export const Login: FunctionComponent<LoginProp> = ({ navigation }: LoginProp): 
           <TouchableOpacity style={button} onPress={handleLogin}>
             <Text style={{ fontSize: 20, color: white }}>Login</Text>
           </TouchableOpacity>
-        </View>
-        <View style={{ ...alignCenter }}>
-          <Text>
-            Do not have an account yet?{" "}
-            <Text
-              onPress={async () => {
-                const Supported = await Linking.canOpenURL(signUpURL);
-                Supported ? await Linking.openURL(signUpURL) : Alert.alert("Error", `cannot open this link: ${signUpURL}`);
-              }}
-              style={{ textDecorationLine: "underline" }}>
-              sign up
-            </Text>{" "}
-            now!
-          </Text>
+          <View style={{ ...alignCenter }}>
+            <Text>
+              Do not have an account yet?{" "}
+              <Text
+                onPress={async () => {
+                  const Supported = await Linking.canOpenURL(signUpURL);
+                  Supported ? await Linking.openURL(signUpURL) : Alert.alert("Error", `cannot open this link: ${signUpURL}`);
+                }}
+                style={{ textDecorationLine: "underline" }}>
+                sign up
+              </Text>{" "}
+              now!
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

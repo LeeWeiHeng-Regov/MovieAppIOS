@@ -19,6 +19,7 @@ import {
   justifyCenter,
   red,
   sh16,
+  sh160,
   sh24,
   sh4,
   sh40,
@@ -40,10 +41,6 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
   const [settingClicked, setSettingClicked] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<number>(1);
 
-  // const genderOption = [
-  //   { key: "1", value: "Male" },
-  //   { key: "2", value: "Female" },
-  // ];
   const genderOption = ["Male", "Female"];
 
   const handleSetEditing = (): void => {
@@ -193,7 +190,7 @@ export const Profile: FunctionComponent<ProfileProp> = ({ navigation }: ProfileP
       </View>
 
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
-        <IconII name="person-circle-outline" size={160} color={blue._3} />
+        <IconII name="person-circle-outline" size={sh160} color={blue._3} />
         <View style={textBox}>
           <Text style={text}>Username: {user.username}</Text>
         </View>

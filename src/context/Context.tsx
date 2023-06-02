@@ -7,12 +7,25 @@ const initialState: IUser = {
   username: "",
   password: "",
 };
-// const initialState: IUser[] = []; //uncomment this line to
+
+const NRICDataInitial: INRICData = {
+  address: "",
+  city: "",
+  country: "Malaysia",
+  DOB: "",
+  gender: "",
+  IDNumber: "",
+  name: "",
+  placeOfBirth: "",
+  postcode: "",
+  state: "",
+};
 
 export const Context: React.Context<IContextInput> = createContext<IContextInput>({
   user: initialState,
   selectedMovieID: 0,
   sessionID: "",
+  NRICData: NRICDataInitial,
   saveUser: () => {},
   changeSelectedMovieID: () => {},
   handleSetSessionID: () => {},
@@ -24,6 +37,7 @@ export const ContextProvider: FunctionComponent<IContextProviderProps> = ({ chil
   const [user, setUser] = useState<IUser>(initialState);
   const [selectedMovieID, setSelectedMovieID] = useState<number>(0);
   const [sessionID, setSessionID] = useState<string>("");
+  const [NRICData, setNRICData] = useState<INRICData>(NRICDataInitial);
 
   const changeSelectedMovieID = (newMovieID: number) => {
     setSelectedMovieID(newMovieID);
@@ -39,7 +53,15 @@ export const ContextProvider: FunctionComponent<IContextProviderProps> = ({ chil
 
   return (
     <Provider
-      value={{ user: user, selectedMovieID: selectedMovieID, sessionID: sessionID, changeSelectedMovieID, saveUser, handleSetSessionID }}>
+      value={{
+        user: user,
+        selectedMovieID: selectedMovieID,
+        sessionID: sessionID,
+        NRICData: NRICData,
+        changeSelectedMovieID,
+        saveUser,
+        handleSetSessionID,
+      }}>
       {children}
     </Provider>
   );

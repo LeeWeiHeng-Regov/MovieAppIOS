@@ -3,6 +3,7 @@ declare interface IContextInput {
   user: IUser;
   selectedMovieID: number;
   sessionID: string;
+  NRICData: INRICData;
   saveUser: (user: IUser) => void;
   changeSelectedMovieID: (movieID: number) => void;
   handleSetSessionID: (sessionID: string) => void;
